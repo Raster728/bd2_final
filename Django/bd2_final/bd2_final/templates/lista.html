@@ -34,7 +34,7 @@
 </head>
 
 <body>
-    <h1>Armazem List</h1>
+    <h1>{{ tipo }}</h1>
     <table>
         <thead>
             <tr>
@@ -44,7 +44,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for row in armazem %}
+            {% for row in vista %}
             <tr>
                 <!-- Loop through the data rows -->
                 {% for field in row %}

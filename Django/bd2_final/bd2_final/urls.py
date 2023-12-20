@@ -20,5 +20,16 @@ from django.urls import include
 from . import views
 
 urlpatterns = [
-    path('', views.index, name="index"),
+    path('armazens', views.armazens, name="vista_armazens"),
+    path('clientes', views.clientes, name="vista_clientes"),
+    path('componentes', views.componentes, name="vista_componentes"),
+    path('encomendas', views.encomendas, name="vista_encomendas"),
+    path('equipamentos', views.equipamentos, name="vista_equipamentos"),
+    path('equipamentos_armazenados', views.equipamentos_armazenados, name="vista_equipamentos_armazenados"),
+    path('fatura_and_items', views.fatura_and_items, name="vista_fatura_and_items"),
+    path('fatura_encomenda', views.fatura_encomenda, name="vista_fatura_encomenda"),
+    path('fornecedores', views.fornecedores, name="vista_fornecedores"),
+    path('guia_remessa', views.guia_remessa, name="vista_guia_remessa"),
+    path('itens_encomenda', views.itens_encomenda, name="vista_itens_encomenda"),
+    path('itens_remessa', views.itens_remessa, name="vista_itens_remessa"),
 ]

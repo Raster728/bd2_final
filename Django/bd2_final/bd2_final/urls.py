@@ -32,4 +32,6 @@ urlpatterns = [
     path('guia_remessa', views.guia_remessa, name="vista_guia_remessa"),
     path('itens_encomenda', views.itens_encomenda, name="vista_itens_encomenda"),
     path('itens_remessa', views.itens_remessa, name="vista_itens_remessa"),
+    path('editar_registro/<int:registro_id>/', views.encomendas, name='editar_registro'),
+    
 ]

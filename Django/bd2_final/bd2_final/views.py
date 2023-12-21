@@ -2,6 +2,9 @@ from django.http import HttpResponse
 from django.db import connection
 from django.shortcuts import render
 
+
+
+
 def armazens(request):
     
     cursor = connection.cursor()
@@ -11,6 +14,9 @@ def armazens(request):
     armazem = cursor.fetchall()
     
     return render(request, 'lista.html', {'vista': armazem, 'columns': columns, 'tipo': 'Armazens'})
+
+
+
 
 def clientes(request):
     
@@ -22,6 +28,13 @@ def clientes(request):
 
     return render(request, 'lista.html', {'vista': clientes, 'columns': columns, 'tipo': 'Clientes'})
 
+
+
+
+
+
+
+
 def componentes(request):
     
     cursor = connection.cursor()
@@ -31,6 +44,20 @@ def componentes(request):
     componentes = cursor.fetchall()
 
     return render(request, 'lista.html', {'vista': componentes, 'columns': columns, 'tipo': 'Componentes'})
+
+
+def componente(request):
+    
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM func_componente_nome();")
+    columns = [col[0] for col in cursor.description]
+    componentes = cursor.fetchall()
+
+    return render(request, 'lista.html', {'vista': componentes, 'columns': columns, 'tipo': 'Componente'})
+
+
+
 
 def encomendas(request):
     

@@ -6,6 +6,24 @@
     <title>Armazem List</title>
     <style>
         /* CSS styles for the table */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+        }
+
+        .content {
+            flex: 1;
+            /* Ocupa o restante do espaço disponível */
+            padding: 20px;
+            /* Outros estilos para o conteúdo principal */
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -34,26 +52,35 @@
 </head>
 
 <body>
-    <h1>{{ tipo }}</h1>
-    <table>
-        <thead>
-            <tr>
-                {% for col in columns %}
-                <th>{{ col }}</th>
+    {% include 'sidebar.html' %}
+    <div class="content">
+        <h1>{{ tipo }}</h1>
+        <table>
+            <thead>
+                <tr>
+                    {% for col in columns %}
+                    <th>{{ col }}</th>
+                    {% endfor %}
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in vista %}
+                <tr>
+                    <!-- Loop through the data rows -->
+                    {% for field in row %}
+                    <td>{{ field }}</td>
+                    {% endfor %}
+                    <td>
+                        <button><a href="{% url 'editar_registro' row.0 %}">Editar</a></button>
+                        <button>Eliminar</button>
+                    </td>
+                </tr>
                 {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in vista %}
-            <tr>
-                <!-- Loop through the data rows -->
-                {% for field in row %}
-                <td>{{ field }}</td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+
 </body>
 
 </html>

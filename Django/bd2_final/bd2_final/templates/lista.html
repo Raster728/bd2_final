@@ -72,7 +72,7 @@
                     <td>{{ field }}</td>
                     {% endfor %}
                     <td>
-                        <button><a href="{% url 'editar_registro' row.0 %}">Editar</a></button>
+                        <button><a href="/editar_{{tipo}}/{{row.0}}">Editar</a></button>
                         <button>Eliminar</button>
                     </td>
                 </tr>

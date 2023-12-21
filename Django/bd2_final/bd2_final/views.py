@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.db import connection
 from django.shortcuts import render
-
+from .forms import Equipamentos
 
 
 
@@ -15,9 +15,6 @@ def armazens(request):
     
     return render(request, 'lista.html', {'vista': armazem, 'columns': columns, 'tipo': 'Armazens'})
 
-
-
-
 def clientes(request):
     
     cursor = connection.cursor()
@@ -28,13 +25,6 @@ def clientes(request):
 
     return render(request, 'lista.html', {'vista': clientes, 'columns': columns, 'tipo': 'Clientes'})
 
-
-
-
-
-
-
-
 def componentes(request):
     
     cursor = connection.cursor()
@@ -44,19 +34,6 @@ def componentes(request):
     componentes = cursor.fetchall()
 
     return render(request, 'lista.html', {'vista': componentes, 'columns': columns, 'tipo': 'Componentes'})
-
-
-def componente(request):
-    
-    cursor = connection.cursor()
-
-    cursor.execute("SELECT * FROM func_componente_nome();")
-    columns = [col[0] for col in cursor.description]
-    componentes = cursor.fetchall()
-
-    return render(request, 'lista.html', {'vista': componentes, 'columns': columns, 'tipo': 'Componente'})
-
-
 
 
 def encomendas(request):
@@ -78,6 +55,22 @@ def equipamentos(request):
     equipamentos = cursor.fetchall()
 
     return render(request, 'lista.html', {'vista': equipamentos, 'columns': columns, 'tipo': 'Equipamentos'})
+
+
+def editar_equipamentos(request):
+
+    if request.method == 'POST':
+        form = Equipamentos(request.POST)
+        if form.is_valid():
+            nome_equ = form.cleaned_data["nome_equipamento"]
+            # Do something with the form data (process, save to database, etc.)
+            # In this example, we're just printing the cleaned data
+            print(form.cleaned_data)
+            # Redirect or render a success page
+    else:
+        form = Equipamentos()
+    
+    return render(request, 'my_template.html', {'form': form})
 
 def equipamentos_armazenados(request):
     

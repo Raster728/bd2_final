@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Armazem List</title>
+    <style>
+        /* CSS styles for the table */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+        }
+
+        .content {
+            flex: 1;
+            /* Ocupa o restante do espaço disponível */
+            padding: 20px;
+            /* Outros estilos para o conteúdo principal */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+        }
+
+        th,
+        td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #e6e6e6;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'sidebar.html' %}
+    
+
+</body>
+
+</html>

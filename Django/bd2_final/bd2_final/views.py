@@ -57,20 +57,26 @@ def equipamentos(request):
     return render(request, 'lista.html', {'vista': equipamentos, 'columns': columns, 'tipo': 'Equipamentos'})
 
 
-def editar_equipamentos(request):
+def editar_equipamentos(request, equipamentos_id):
+
+    cursor = connection.cursor()
+
+    query = "SELECT * FROM func_equipamento_nome(%s);"
+    cursor.execute(query, [equipamentos_id])
+    columns = [col[0] for col in cursor.description]
+    equipamentos = cursor.fetchall()
 
     if request.method == 'POST':
         form = Equipamentos(request.POST)
         if form.is_valid():
             nome_equ = form.cleaned_data["nome_equipamento"]
-            # Do something with the form data (process, save to database, etc.)
-            # In this example, we're just printing the cleaned data
-            print(form.cleaned_data)
-            # Redirect or render a success page
     else:
         form = Equipamentos()
     
-    return render(request, 'my_template.html', {'form': form})
+    return render(request, 'lista.html', {'form': form, 'vista': equipamentos, 'columns': columns})
+
+
+
 
 def equipamentos_armazenados(request):
     

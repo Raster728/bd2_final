@@ -73,7 +73,7 @@ def editar_equipamentos(request, equipamentos_id):
     else:
         form = Equipamentos()
     
-    return render(request, 'lista.html', {'form': form, 'vista': equipamentos, 'columns': columns})
+    return render(request, 'editar_registro.html', {'form': form, 'vista': equipamentos, 'columns': columns})
 
 
 

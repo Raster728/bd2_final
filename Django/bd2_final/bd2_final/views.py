@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.db import connections
-from django.shortcuts import render
-from .forms import Equipamentos
+from django.shortcuts import render, redirect
+from . import forms
 
 
 
@@ -64,15 +64,22 @@ def editar_equipamentos(request, equipamentos_id):
         equipamentos = cursor.fetchall()
 
     if request.method == 'POST':
-        form = Equipamentos(request.POST)
+        form = forms.Equipamentos(request.POST)
         if form.is_valid():
             nome_equ = form.cleaned_data["nome_equipamento"]
+            tipo = form.cleaned_data["tipo"]
+            cur = connections['default'].cursor()
+            cur.execute("SELECT public.editar_equipamentos(%s, %s, %s);", [equipamentos_id, nome_equ, tipo])
+            return redirect('http://127.0.0.1:8000/equipamentos')  
     else:
-        form = Equipamentos()
+        form_initial_data = {}
+        if equipamentos:
+            equipamento = equipamentos[0]
+            for idx, column in enumerate(columns):
+                form_initial_data[column] = equipamento[idx]
+        form = forms.Equipamentos(initial=form_initial_data)
     
     return render(request, 'editar_registro.html', {'form': form, 'vista': equipamentos, 'columns': columns})
-
-
 
 
 def equipamentos_armazenados(request):

@@ -53,29 +53,15 @@
 
 <body>
     {% include 'sidebar.html' %}
-    
+
 
     <div class="content">
-        <h1>Detalhes do Equipamento</h1>
-        {% for equipamento in vista %}
-            <div>
-                <!-- Exibir os detalhes do equipamento -->
-                <p><strong>ID do Equipamento:</strong> {{ equipamento.0 }}</p>
-                <p><strong>Nome do Equipamento:</strong> {{ equipamento.1 }}</p>
-                <!-- Exibir outros detalhes do equipamento conforme necessário -->
-            </div>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
 
-            <h2>Editar Nome do Equipamento</h2>
-
-            <!-- Formulário para editar o nome do equipamento -->
-            <form method="POST">
-                {% csrf_token %}
-                <label for="nome_equipamento">Novo Nome do Equipamento:</label>
-                <input type="text" id="nome_equipamento" name="nome_equipamento" value="{{ equipamento.1 }}">
-                <br><br>
-                <input type="submit" value="Salvar Alterações">
-            </form>
-        {% endfor %}
+            <button type="submit">Guardar</button>
+        </form>
     </div>
 </body>
 

@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Armazem List</title>
     <style>
         /* CSS styles for the table */
         html,
@@ -19,9 +18,7 @@
 
         .content {
             flex: 1;
-            /* Ocupa o restante do espaço disponível */
             padding: 20px;
-            /* Outros estilos para o conteúdo principal */
         }
 
         table {
@@ -53,8 +50,6 @@
 
 <body>
     {% include 'sidebar.html' %}
-
-
     <div class="content">
         <form method="POST">
             {% csrf_token %}

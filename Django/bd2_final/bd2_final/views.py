@@ -3,7 +3,7 @@ from django.db import connections
 from django.shortcuts import render, redirect
 from . import forms
 
-
+#############################################################  READ  ##########################################################################################
 
 def armazens(request):
     
@@ -54,32 +54,6 @@ def equipamentos(request):
 
     return render(request, 'lista.html', {'vista': equipamentos, 'columns': columns, 'tipo': 'Equipamentos'})
 
-
-def editar_equipamentos(request, equipamentos_id):
-
-    with connections['default'].cursor() as cursor:
-        query = "SELECT * FROM func_equipamento_nome(%s);"
-        cursor.execute(query, [equipamentos_id])
-        columns = [col[0] for col in cursor.description]
-        equipamentos = cursor.fetchall()
-
-    if request.method == 'POST':
-        form = forms.Equipamentos(request.POST)
-        if form.is_valid():
-            nome_equ = form.cleaned_data["nome_equipamento"]
-            tipo = form.cleaned_data["tipo"]
-            cur = connections['default'].cursor()
-            cur.execute("SELECT public.editar_equipamentos(%s, %s, %s);", [equipamentos_id, nome_equ, tipo])
-            return redirect('http://127.0.0.1:8000/equipamentos')  
-    else:
-        form_initial_data = {}
-        if equipamentos:
-            equipamento = equipamentos[0]
-            for idx, column in enumerate(columns):
-                form_initial_data[column] = equipamento[idx]
-        form = forms.Equipamentos(initial=form_initial_data)
-    
-    return render(request, 'editar_registro.html', {'form': form, 'vista': equipamentos, 'columns': columns})
 
 
 def equipamentos_armazenados(request):
@@ -151,3 +125,58 @@ def itens_remessa(request):
         itens_remessa = cursor.fetchall()
 
     return render(request, 'lista.html', {'vista': itens_remessa, 'columns': columns, 'tipo': 'Itens das remessas'})
+
+
+#############################################################  UPDATE  ##########################################################################################
+
+def editar_equipamentos(request, equipamentos_id):
+
+    with connections['default'].cursor() as cursor:
+        query = "SELECT * FROM func_equipamento_nome(%s);"
+        cursor.execute(query, [equipamentos_id])
+        columns = [col[0] for col in cursor.description]
+        equipamentos = cursor.fetchall()
+
+    if request.method == 'POST':
+        form = forms.Equipamentos(request.POST)
+        if form.is_valid():
+            nome_equ = form.cleaned_data["nome_equipamento"]
+            tipo = form.cleaned_data["tipo"]
+            cur = connections['default'].cursor()
+            cur.execute("SELECT public.editar_equipamentos(%s, %s, %s);", [equipamentos_id, nome_equ, tipo])
+            return redirect('http://127.0.0.1:8000/equipamentos')  
+    else:
+        form_initial_data = {}
+        if equipamentos:
+            equipamento = equipamentos[0]
+            for idx, column in enumerate(columns):
+                form_initial_data[column] = equipamento[idx]
+        form = forms.Equipamentos(initial=form_initial_data)
+    
+    return render(request, 'editar_registro.html', {'form': form})
+
+
+def editar_componentes(request, componentes_id):
+
+    with connections['default'].cursor() as cursor:
+        cursor.execute("SELECT * FROM func_componente_nome(%s);", [componentes_id])
+        columns = [col[0] for col in cursor.description]
+        componentes = cursor.fetchall()
+
+    if request.method == 'POST':
+        form = forms.Componentes(request.POST)
+        if form.is_valid():
+            nome_comp = form.cleaned_data["nome_componente"]
+            desc_comp = form.cleaned_data["desc_componente"]
+            cur = connections['default'].cursor()
+            cur.execute("SELECT public.editar_componentes(%s, %s, %s);", [componentes_id, nome_comp, desc_comp])
+            return redirect('http://127.0.0.1:8000/componentes')  
+    else:
+        form_initial_data = {}
+        if componentes:
+            component = componentes[0]
+            for idx, column in enumerate(columns):
+                form_initial_data[column] = component[idx]
+        form = forms.Componentes(initial=form_initial_data)
+    
+    return render(request, 'editar_registro.html', {'form': form})

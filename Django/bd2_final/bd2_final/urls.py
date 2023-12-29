@@ -34,5 +34,5 @@ urlpatterns = [
     path('itens_remessa', views.itens_remessa, name="vista_itens_remessa"),
     path('editar_registro/<int:registro_id>/', views.encomendas, name='editar_registro'),
     path('editar_Equipamentos/<int:equipamentos_id>/', views.editar_equipamentos, name='editar_Equipamentos'),
-    
+    path('editar_Componentes/<int:componentes_id>/', views.editar_componentes, name='editar_Componentes'),
 ]

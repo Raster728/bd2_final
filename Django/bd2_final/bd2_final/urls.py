@@ -20,6 +20,9 @@ from django.urls import include
 from . import views
 
 urlpatterns = [
+    
+    #############################################################  READ  ##########################################################################################
+
     path('armazens', views.armazens, name="vista_armazens"),
     path('clientes', views.clientes, name="vista_clientes"),
     path('componentes', views.componentes, name="vista_componentes"),
@@ -32,7 +35,10 @@ urlpatterns = [
     path('guia_remessa', views.guia_remessa, name="vista_guia_remessa"),
     path('itens_encomenda', views.itens_encomenda, name="vista_itens_encomenda"),
     path('itens_remessa', views.itens_remessa, name="vista_itens_remessa"),
-    path('editar_registro/<int:registro_id>/', views.encomendas, name='editar_registro'),
+
+    #############################################################  UPDATE  ##########################################################################################
+
     path('editar_Equipamentos/<int:equipamentos_id>/', views.editar_equipamentos, name='editar_Equipamentos'),
     path('editar_Componentes/<int:componentes_id>/', views.editar_componentes, name='editar_Componentes'),
+    path('editar_Clientes/<int:clientes_id>/', views.editar_clientes, name='editar_Clientes'),
 ]

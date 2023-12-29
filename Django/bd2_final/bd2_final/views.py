@@ -180,3 +180,27 @@ def editar_componentes(request, componentes_id):
         form = forms.Componentes(initial=form_initial_data)
     
     return render(request, 'editar_registro.html', {'form': form})
+
+def editar_clientes(request, clientes_id):
+
+    with connections['default'].cursor() as cursor:
+        cursor.execute("SELECT * FROM func_cliente_id(%s);", [clientes_id])
+        columns = [col[0] for col in cursor.description]
+        clientes = cursor.fetchall()
+
+    if request.method == 'POST':
+        form = forms.Clientes(request.POST)
+        if form.is_valid():
+            nome_cliente = form.cleaned_data["nome_cliente"]
+            cur = connections['default'].cursor()
+            cur.execute("SELECT public.editar_clients(%s, %s);", [clientes_id, nome_cliente])
+            return redirect('http://127.0.0.1:8000/clientes')  
+    else:
+        form_initial_data = {}
+        if componentes:
+            cliente = clientes[0]
+            for idx, column in enumerate(columns):
+                form_initial_data[column] = cliente[idx]
+        form = forms.Clientes(initial=form_initial_data)
+    
+    return render(request, 'editar_registro.html', {'form': form})

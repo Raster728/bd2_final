@@ -197,10 +197,52 @@ def editar_clientes(request, clientes_id):
             return redirect('http://127.0.0.1:8000/clientes')  
     else:
         form_initial_data = {}
-        if componentes:
+        if clientes:
             cliente = clientes[0]
             for idx, column in enumerate(columns):
                 form_initial_data[column] = cliente[idx]
         form = forms.Clientes(initial=form_initial_data)
     
     return render(request, 'editar_registro.html', {'form': form})
+
+def editar_armazens(request, armazens_id):
+
+    with connections['default'].cursor() as cursor:
+        cursor.execute("SELECT * FROM func_armazem_id(%s);", [armazens_id])
+        columns = [col[0] for col in cursor.description]
+        armazens = cursor.fetchall()
+
+    if request.method == 'POST':
+        form = forms.Armazens(request.POST)
+        if form.is_valid():
+            nome_arm = form.cleaned_data["nome_arm"]
+            setor = form.cleaned_data["setor"]
+            notas = form.cleaned_data["notas"]
+            cur = connections['default'].cursor()
+            cur.execute("SELECT public.editar_armazem(%s, %s, %s, %s);", [armazens_id, nome_arm, setor, notas])
+            return redirect('http://127.0.0.1:8000/armazens')  
+    else:
+        form_initial_data = {}
+        if armazens:
+            armazem = armazens[0]
+            for idx, column in enumerate(columns):
+                form_initial_data[column] = armazem[idx]
+        form = forms.Armazens(initial=form_initial_data)
+    
+    return render(request, 'editar_registro.html', {'form': form})
+
+#############################################################  CREATE  ##########################################################################################
+
+
+def adicionar_clientes(request):
+
+    if request.method == "POST":
+        form = forms.Clientes(request.POST)
+        if form.is_valid():
+            nome_cliente = form.cleaned_data['nome_cliente']
+            cur = connections['default'].cursor()
+            cur.execute("call public.proc_inserir_cliente(%s);", [nome_cliente,])
+            return redirect('http://127.0.0.1:8000/clientes')  
+    else:
+        form = forms.Clientes()
+    return render(request, 'adicionar.html', {'form': form})

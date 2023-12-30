@@ -12,3 +12,8 @@ class Componentes(forms.Form):
 
 class Clientes(forms.Form):
     nome_cliente = forms.CharField(label='Nome do cliente', max_length=100)
+
+class Armazens(forms.Form):
+    nome_arm = forms.CharField(label='Nome do armazem', max_length=100)
+    setor = forms.CharField(label='Setor do armazem', max_length=100)
+    notas = forms.CharField(label='Notas', max_length=100)

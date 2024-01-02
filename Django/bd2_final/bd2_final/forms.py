@@ -17,3 +17,8 @@ class Armazens(forms.Form):
     nome_arm = forms.CharField(label='Nome do armazem', max_length=100)
     setor = forms.CharField(label='Setor do armazem', max_length=100)
     notas = forms.CharField(label='Notas', max_length=100)
+
+
+class Login(forms.Form):
+    username = forms.CharField(label='Nome do utilizador', max_length=100)
+    password = forms.CharField(label='Palavra-Passe', max_length=100)

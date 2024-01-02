@@ -55,3 +55,54 @@ BEGIN
     WHERE vc.id_equipamento = id;
 END;
 $BODY$;
+
+CREATE OR REPLACE FUNCTION public.func_armazem_id(
+	id integer)
+    RETURNS TABLE(id_armazem integer, nome_arm text, setor text, notas text) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    RETURN QUERY
+    SELECT va.id_armazem, va.nome_arm, va.setor, va.notas
+    FROM public.view_armazem va
+    WHERE va.id_armazem = id;
+END;
+$BODY$;
+
+CREATE OR REPLACE FUNCTION public.func_encomenda_id(
+	id integer)
+    RETURNS TABLE(id_enc integer, nome_forn text, notas_enc text, data_enc timestamp without time zone) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    RETURN QUERY
+    SELECT ve.id_enc, ve.nome_forn, ve.notas_enc, ve.data_enc
+    FROM public.view_encomenda ve
+    WHERE va.id_armazem = id;
+END;
+$BODY$;
+
+CREATE OR REPLACE FUNCTION public.func_itens_remessa_id(
+	id integer)
+    RETURNS TABLE(id_item_remessa integer, nome_comp text, quantidade_remessa integer, nome_arm text, setor text, data_chegada timestamp without time zone) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    RETURN QUERY
+    SELECT vir.id_item_remessa, vir.nome_comp, vir.quantidade_remessa, vir.nome_arm, vir.setor, vir.data_chegada
+    FROM public.view_itens_remessa vir
+    WHERE va.id_item_remessa = id;
+END;
+$BODY$;

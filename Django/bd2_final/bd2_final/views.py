@@ -2,6 +2,11 @@ from django.http import HttpResponse
 from django.db import connections
 from django.shortcuts import render, redirect
 from . import forms
+from .models import User
+import pymongo
+from django.contrib.auth.hashers import check_password
+
+conexaomongo = pymongo.MongoClient("mongodb://localhost:27017/")["trabalho_final"]
 
 #############################################################  READ  ##########################################################################################
 
@@ -11,7 +16,6 @@ def armazens(request):
         cursor.execute("SELECT * FROM exibir_armazem();")
         columns = [col[0] for col in cursor.description]
         armazem = cursor.fetchall()
-    
     
     return render(request, 'lista.html', {'vista': armazem, 'columns': columns, 'tipo': 'Armazens'})
 
@@ -246,3 +250,23 @@ def adicionar_clientes(request):
     else:
         form = forms.Clientes()
     return render(request, 'adicionar.html', {'form': form})
+
+#############################################################  LOGIN  ##########################################################################################
+
+def login_view(request):
+    if request.method == 'POST':
+        form = forms.Login(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            bd = conexaomongo
+            col = bd["users"]
+            utilizador = col.find_one({'username': username})
+            if utilizador:
+                palavra_passe = utilizador.get('password')
+                if (password == palavra_passe):
+                    return redirect('http://127.0.0.1:8000/clientes')
+    else: 
+        form = forms.Login()
+    return render(request, 'login.html', {'form': form})
+    

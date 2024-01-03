@@ -85,6 +85,12 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432'
     },
+    'mongo': {
+        'ENGINE': 'djongo',
+        'NAME': 'trabalho_final',
+        'HOST' : 'mongodb://localhost:27017/',
+        'ENFORCE_SCHEMA': False,
+    }
 }
 
 

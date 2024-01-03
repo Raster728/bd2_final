@@ -3,6 +3,13 @@ from django.db import connections
 from django.shortcuts import render, redirect
 from . import forms
 
+
+#############################################################  ADMIN  ##########################################################################################
+
+def index(request):
+    return render(request, 'index.html')
+
+
 #############################################################  READ  ##########################################################################################
 
 def armazens(request):

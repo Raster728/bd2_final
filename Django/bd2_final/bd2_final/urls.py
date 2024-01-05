@@ -24,7 +24,10 @@ urlpatterns = [
     #############################################################  ADMIN  ##########################################################################################
 
     path ('', views.index, name='index'), 
-     path('login/', views.login_view, name='login'),
+    path('login/', views.login_view, name='login'),
+    path('Vendas/', views.clientes, name='vendas'),
+    path('Producao/', views.equipamentos, name='producao'),
+    path('Encomendas/', views.encomendas, name='encomendas'),
     
     #############################################################  READ  ##########################################################################################
 
@@ -51,4 +54,9 @@ urlpatterns = [
     #############################################################  CREATE  ##########################################################################################
 
     path('adicionar_Clientes', views.adicionar_clientes, name='adicionar_Clientes'),
+    path('adicionar_Encomendas', views.fazer_encomendas, name='adicionar_Encomenda'),
+    path('adicionar_Encomendas/<int:encomenda_id>/', views.fazer_encomendas_2, name='adicionar_Encomenda_item'),
+
+    path('adicionar_Guias', views.escolher_enc_para_guia, name='adicionar_Encomenda_guia'),
+    path('editar_Guias/<int:encomenda_id>/<int:guia_id>/', views.criar_guia, name='adicionar_Guias_item'),
 ]

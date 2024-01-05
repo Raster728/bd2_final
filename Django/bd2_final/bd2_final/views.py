@@ -1,10 +1,10 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.db import connections
 from django.shortcuts import render, redirect
 from . import forms
 from .models import User
 import pymongo
-from django.contrib.auth.hashers import check_password
+from datetime import date
 
 conexaomongo = pymongo.MongoClient("mongodb://localhost:27017/")["trabalho_final"]
 
@@ -115,7 +115,7 @@ def guia_remessa(request):
         columns = [col[0] for col in cursor.description]
         guia_remessa = cursor.fetchall()
 
-    return render(request, 'lista.html', {'vista': guia_remessa, 'columns': columns, 'tipo': 'Guias de remessa'})
+    return render(request, 'lista.html', {'vista': guia_remessa, 'columns': columns, 'tipo': 'Guias'})
 
 def itens_encomenda(request):
     
@@ -258,6 +258,69 @@ def adicionar_clientes(request):
         form = forms.Clientes()
     return render(request, 'adicionar.html', {'form': form})
 
+def fazer_encomendas(request):
+
+
+    if request.method == "POST":
+        form = forms.Encomendas(request.POST)
+        if form.is_valid():
+            id_forn = form.cleaned_data['id_forn']
+            notas_enc = form.cleaned_data['notas_enc']
+            data_enc = form.cleaned_data['data_enc']
+            cur = connections['default'].cursor()
+            cur.execute("call public.proc_inserir_encomenda(%s, %s, %s, NULL);", [id_forn, notas_enc, data_enc])
+            id_output = cur.fetchone()[0]
+            redirect_url = f'/adicionar_Encomendas/{id_output}'
+            return HttpResponseRedirect(redirect_url)
+    else:
+        form = forms.Encomendas()
+
+    return render(request, 'adicionar.html', {'form': form})
+
+def fazer_encomendas_2(request, encomenda_id):
+
+    with connections['default'].cursor() as cursor:
+        cursor.execute("SELECT * FROM func_itens_enc_id(%s);", [encomenda_id])
+        columns = [col[0] for col in cursor.description]
+        item = cursor.fetchall()
+
+    if request.method == "POST":
+        form = forms.Itens_Encomendas(request.POST)
+        if form.is_valid():
+            componente = form.cleaned_data['componente']
+            quantidade = form.cleaned_data['quantidade']
+            cur = connections['default'].cursor()
+            cur.execute("call public.proc_inserir_itens_encomenda(%s, %s, %s);", [encomenda_id, componente, quantidade])
+            redirect_url = f'/adicionar_Encomendas/{encomenda_id}'
+            return HttpResponseRedirect(redirect_url)  
+    else:
+        form = forms.Itens_Encomendas()
+
+    return render(request, 'criar_enc.html', {'vista': item, 'columns': columns,'form': form})
+
+def escolher_enc_para_guia(request):
+    current_datetime = date.today()
+    with connections['default'].cursor() as cursor:
+
+        cursor.execute("SELECT * FROM exibir_encomenda();")
+        columns = [col[0] for col in cursor.description]
+        encomendas = cursor.fetchall()
+
+        cursor.execute("call public.proc_inserir_guia_remessa(%s, NULL);", [current_datetime])
+        id_output = cursor.fetchone()[0]
+
+    return render(request, 'enc_guias.html', {'vista': encomendas, 'columns': columns, 'tipo': 'Guias', 'guia': id_output})
+
+def criar_guia(request, encomenda_id, guia_id):
+    with connections['default'].cursor() as cursor:
+
+        cursor.execute("SELECT * FROM func_itens_enc_id(%s);", [encomenda_id])
+        columns = [col[0] for col in cursor.description]
+        encomendas = cursor.fetchall()
+
+    return render(request, 'item_enc_para_guia.html', {'vista': encomendas, 'columns': columns, 'tipo': 'Guias', 'guia': guia_id, })
+
+
 #############################################################  LOGIN  ##########################################################################################
 
 def login_view(request):
@@ -276,4 +339,8 @@ def login_view(request):
     else: 
         form = forms.Login()
     return render(request, 'login.html', {'form': form})
+
+#############################################################  EXPORTAR PARA MONGO  ##########################################################################################
+
+
     

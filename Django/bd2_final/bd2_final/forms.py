@@ -1,6 +1,19 @@
 from django import forms
-
 from django.db import connections
+
+
+class mao_de_obra(forms.Form):
+    nome_mo = forms.CharField(label='Nome da mão de obra', max_length=100)
+    custo_mo = forms.CharField(label='Custo da mão de obra')
+    tipo_mo = forms.CharField(label='Tipo de mão de obra', max_length=100)
+
+
+class fornecedores(forms.Form):
+    nome_forn = forms.CharField(label='Nome Fornecedor', max_length=100)
+
+
+class fatura_encomenda(forms.Form):
+    preco_total_enc = forms.CharField(label='Preço Total Encomenda')
 
 
 class Equipamentos(forms.Form):

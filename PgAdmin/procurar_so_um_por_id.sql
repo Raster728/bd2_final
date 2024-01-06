@@ -141,3 +141,70 @@ BEGIN
 END;
 $BODY$;
 
+CREATE OR REPLACE FUNCTION public.func_equipamento_armazenado_id(
+	id integer)
+    RETURNS TABLE(id_eq_arm integer, nome_arm text, setor text, id_ficha_prod integer, nome_equipamento text, id_quant_eq_arm integer) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    RETURN QUERY
+    SELECT vea.id_eq_arm, vea.nome_arm, vea.setor, vea.id_ficha_prod, vea.nome_equipamento, vea.id_quant_eq_arm
+    FROM public.view_equipamentos_armazenados vea
+    WHERE vea.id_eq_arm = id;
+END;
+$BODY$;
+
+CREATE OR REPLACE FUNCTION public.func_fatura_id(
+	id integer)
+    RETURNS TABLE(id_fatura_enc integer, preco_total_enc money) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    RETURN QUERY
+    SELECT vfe.id_fatura_enc, vfe.preco_total_enc
+    FROM public.view_fatura_encomenda vfe
+    WHERE vfe.id_fatura_enc = id;
+END;
+$BODY$;
+
+CREATE OR REPLACE FUNCTION public.func_fornecedores_id(
+	id integer)
+    RETURNS TABLE(id_forn integer, nome_forn text) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    RETURN QUERY
+    SELECT vf.id_forn, vf.nome_forn
+    FROM public.view_fornecedores vf
+    WHERE vf.id_forn = id;
+END;
+$BODY$;
+
+CREATE OR REPLACE FUNCTION public.func_mo_id(
+	id integer)
+    RETURNS TABLE(id_mao_obra integer, nome_mo text, custo_mo text, tipo_mo text) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    RETURN QUERY
+    SELECT vmo.id_mao_obra, vmo.nome_mo, vmo.custo_mo, vmo.tipo_mo
+    FROM public.view_mo vmo
+    WHERE vmo.id_mao_obra = id;
+END;
+$BODY$;

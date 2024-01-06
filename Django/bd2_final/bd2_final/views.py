@@ -75,7 +75,7 @@ def equipamentos_armazenados(request):
         columns = [col[0] for col in cursor.description]
         equipamentos_armazenados = cursor.fetchall()
 
-    return render(request, 'lista.html', {'vista': equipamentos_armazenados, 'columns': columns, 'tipo': 'Equipamentos armazenados'})
+    return render(request, 'lista.html', {'vista': equipamentos_armazenados, 'columns': columns, 'tipo': 'Equipamentos_armazenados'})
 
 def fatura_and_items(request):
     
@@ -95,7 +95,7 @@ def fatura_encomenda(request):
         columns = [col[0] for col in cursor.description]
         fatura_encomenda = cursor.fetchall()
 
-    return render(request, 'lista.html', {'vista': fatura_encomenda, 'columns': columns, 'tipo': 'Faturas das encomendas'})
+    return render(request, 'lista.html', {'vista': fatura_encomenda, 'columns': columns, 'tipo': 'Faturas_das_encomendas'})
 
 def fornecedores(request):
     
@@ -135,8 +135,17 @@ def itens_remessa(request):
         columns = [col[0] for col in cursor.description]
         itens_remessa = cursor.fetchall()
 
-    return render(request, 'lista.html', {'vista': itens_remessa, 'columns': columns, 'tipo': 'Itens das remessas'})
+    return render(request, 'lista.html', {'vista': itens_remessa, 'columns': columns, 'tipo': 'Itens_das_remessas'})
 
+def mao_obra(request):
+    
+    with connections['default'].cursor() as cursor:
+
+        cursor.execute("SELECT * FROM exibir_mo();")
+        columns = [col[0] for col in cursor.description]
+        mao_obra = cursor.fetchall()
+
+    return render(request, 'lista.html', {'vista': mao_obra, 'columns': columns, 'tipo': 'Mao_de_obra'})
 
 #############################################################  UPDATE  ##########################################################################################
 
@@ -239,6 +248,80 @@ def editar_armazens(request, armazens_id):
             for idx, column in enumerate(columns):
                 form_initial_data[column] = armazem[idx]
         form = forms.Armazens(initial=form_initial_data)
+    
+    return render(request, 'editar_registro.html', {'form': form})
+
+def editar_Fatura_encomenda(request, fatura_encomenda_id):
+
+    with connections['default'].cursor() as cursor:
+        cursor.execute("SELECT * FROM func_fatura_id(%s);", [fatura_encomenda_id])
+        columns = [col[0] for col in cursor.description]
+        faturas_encomenda = cursor.fetchall()
+
+    if request.method == 'POST':
+        form = forms.fatura_encomenda(request.POST)
+        if form.is_valid():
+            preco_total_enc = form.cleaned_data["preco_total_enc"]
+            cur = connections['default'].cursor()
+            cur.execute("SELECT public.editar_fatura_encomenda(%s, %s);", [fatura_encomenda_id, preco_total_enc])
+            return redirect('http://127.0.0.1:8000/fatura_encomenda')  
+    else:
+        form_initial_data = {}
+        if faturas_encomenda:
+            fatura_encomenda = faturas_encomenda[0]
+            for idx, column in enumerate(columns):
+                form_initial_data[column] = fatura_encomenda[idx]
+        form = forms.fatura_encomenda(initial=form_initial_data)
+    
+    return render(request, 'editar_registro.html', {'form': form})
+
+def editar_Fornecedores(request, fornecedores_id):
+
+    with connections['default'].cursor() as cursor:
+        cursor.execute("SELECT * FROM func_fornecedores_id(%s);", [fornecedores_id])
+        columns = [col[0] for col in cursor.description]
+        fornecedores = cursor.fetchall()
+
+    if request.method == 'POST':
+        form = forms.fornecedores(request.POST)
+        if form.is_valid():
+            nome_forn = form.cleaned_data["nome_forn"]
+            cur = connections['default'].cursor()
+            cur.execute("SELECT public.editar_fornecedores(%s, %s);", [fornecedores_id, nome_forn])
+            return redirect('http://127.0.0.1:8000/fornecedores')  
+    else:
+        form_initial_data = {}
+        if fornecedores:
+            fornecedor= fornecedores[0]
+            for idx, column in enumerate(columns):
+                form_initial_data[column] = fornecedor[idx]
+        form = forms.fornecedores(initial=form_initial_data)
+    
+    return render(request, 'editar_registro.html', {'form': form})
+
+def editar_Mao_de_obra(request, mao_obra_id):
+
+    with connections['default'].cursor() as cursor:
+        cursor.execute("SELECT * FROM func_mo_id(%s);", [mao_obra_id])
+        columns = [col[0] for col in cursor.description]
+        mao_obra = cursor.fetchall()
+
+    if request.method == 'POST':
+        form = forms.mao_de_obra(request.POST)
+        if form.is_valid():
+            nome_mo = form.cleaned_data["nome_mo"]
+            custo_mo = form.cleaned_data["custo_mo"]
+            tipo_mo = form.cleaned_data["tipo_mo"]
+            cur = connections['default'].cursor()
+            cur.execute("SELECT public.editar_mao_obra(%s, %s, %s, %s);", [mao_obra_id, nome_mo, custo_mo, tipo_mo])
+            return redirect('http://127.0.0.1:8000/Mao_de_obra')  
+    else:
+        form_initial_data = {}
+        if mao_obra:
+            mo = mao_obra[0]
+            for idx, column in enumerate(columns):
+                form_initial_data[column] = mo[idx]
+        form = forms.mao_de_obra(initial=form_initial_data)
     
     return render(request, 'editar_registro.html', {'form': form})
 

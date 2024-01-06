@@ -43,6 +43,7 @@ urlpatterns = [
     path('guia_remessa', views.guia_remessa, name="vista_guia_remessa"),
     path('itens_encomenda', views.itens_encomenda, name="vista_itens_encomenda"),
     path('itens_remessa', views.itens_remessa, name="vista_itens_remessa"),
+    path('mao_obra', views.mao_obra, name="vista_mao_obra"),
 
     #############################################################  UPDATE  ##########################################################################################
 
@@ -50,6 +51,9 @@ urlpatterns = [
     path('editar_Componentes/<int:componentes_id>/', views.editar_componentes, name='editar_Componentes'),
     path('editar_Clientes/<int:clientes_id>/', views.editar_clientes, name='editar_Clientes'),
     path('editar_Armazens/<int:armazens_id>/', views.editar_armazens, name='editar_Armazens'),
+    path('editar_Faturas_das_encomendas/<int:fatura_encomenda_id>/', views.editar_Fatura_encomenda, name='editar_Fatura_encomenda'),
+    path('editar_Fornecedores/<int:fornecedores_id>/', views.editar_Fornecedores, name='editar_Fornecedores'),
+    path('editar_Mao_de_obra/<int:mao_obra_id>/', views.editar_Mao_de_obra, name='editar_Mao_de_obra'),
 
     #############################################################  CREATE  ##########################################################################################
 

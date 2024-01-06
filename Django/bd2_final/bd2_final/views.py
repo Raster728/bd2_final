@@ -314,11 +314,27 @@ def escolher_enc_para_guia(request):
 def criar_guia(request, encomenda_id, guia_id):
     with connections['default'].cursor() as cursor:
 
-        cursor.execute("SELECT * FROM func_itens_enc_id(%s);", [encomenda_id])
+        cursor.execute("SELECT * FROM func_itens_enc_id_com_id(%s);", [encomenda_id])
         columns = [col[0] for col in cursor.description]
         encomendas = cursor.fetchall()
 
-    return render(request, 'item_enc_para_guia.html', {'vista': encomendas, 'columns': columns, 'tipo': 'Guias', 'guia': guia_id, })
+    return render(request, 'item_enc_para_guia.html', {'vista': encomendas, 'columns': columns, 'tipo': 'Guias', 'guia': guia_id, 'encomenda': encomenda_id})
+
+def adicionar_itens_guia(request, encomenda_id, guia_id, item_id, quantidade_id):
+    if request.method == "POST":
+        form = forms.Guia_Remessa(request.POST)
+        if form.is_valid():
+            armazem = form.cleaned_data['armazem']
+            quantidade = form.cleaned_data['quantidade']
+            cur = connections['default'].cursor()
+            cur.execute("call public.proc_criar_guia_remessa_com_itens(%s, %s, %s, %s, %s);", [armazem, item_id, guia_id, quantidade, quantidade_id])
+            redirect_url = f'/editar_Guias/{encomenda_id}/{guia_id}/'
+            print(encomenda_id,guia_id )
+            return HttpResponseRedirect(redirect_url)  
+    else:
+        form = forms.Guia_Remessa()
+
+    return render(request, 'adicionar.html', {'form': form, 'tipo': 'Guias', 'guia': guia_id, 'encomenda': encomenda_id})
 
 
 #############################################################  LOGIN  ##########################################################################################

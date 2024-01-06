@@ -42,12 +42,12 @@ class Itens_Encomendas(forms.Form):
 
 class Guia_Remessa(forms.Form):
     with connections['default'].cursor() as cursor:
-            cursor.execute("SELECT * FROM exibir_encomenda();")
-            encomendas = cursor.fetchall()
+            cursor.execute("SELECT * FROM exibir_armazem();")
+            armazens = cursor.fetchall()
         
-    encomendas_choices = [(encomenda[0], encomenda[1]) for encomenda in encomendas]
-    componente = forms.ChoiceField(choices=encomendas_choices, label='Componentes')
-    quantidade = forms.IntegerField(label='Quantidade do componente')
+    armazens_choices = [(armazem[0], armazem[1]) for armazem in armazens]
+    armazem = forms.ChoiceField(choices=armazens_choices, label='Armazem')
+    quantidade = forms.IntegerField(label='Quantidade do componente que chegou')
 
 
 class Login(forms.Form):

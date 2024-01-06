@@ -142,3 +142,17 @@ CREATE OR REPLACE VIEW public.view_mo
     mao_obra.custo_mo,
     mao_obra.tipo_mo
    FROM mao_obra;
+   
+CREATE OR REPLACE VIEW public.view_itens_com_id
+ AS
+ SELECT ie.id_item_enc,
+    ve.id_enc,
+    ve.nome_forn,
+    ve.notas_enc,
+    ve.data_enc,
+    c.nome_comp,
+    ie.quantidade_enc,
+    c.desc_comp
+   FROM view_encomenda ve
+     RIGHT JOIN item_enc ie ON ve.id_enc = ie.id_enc
+     LEFT JOIN componentes c ON c.id_componente = ie.id_componente;

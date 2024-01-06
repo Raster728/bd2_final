@@ -106,3 +106,38 @@ BEGIN
     WHERE va.id_item_remessa = id;
 END;
 $BODY$;
+
+CREATE OR REPLACE FUNCTION public.func_itens_enc_id_com_id(
+	id integer)
+    RETURNS TABLE(id_item_enc integer, id_enc integer, nome_forn text, notas_enc text, data_enc timestamp without time zone, nome_comp text, quantidade_enc integer, desc_comp text) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    RETURN QUERY
+    SELECT vie.id_item_enc, vie.id_enc, vie.nome_forn, vie.notas_enc, vie.data_enc, vie.nome_comp, vie.quantidade_enc, vie.desc_comp
+    FROM public.view_itens_com_id vie
+    WHERE vie.id_enc = id;
+END;
+$BODY$;
+
+CREATE OR REPLACE FUNCTION public.func_itens_enc_id(
+	id integer)
+    RETURNS TABLE(id_enc integer, nome_forn text, notas_enc text, data_enc timestamp without time zone, nome_comp text, quantidade_enc integer, desc_comp text) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    RETURN QUERY
+    SELECT vie.id_enc, vie.nome_forn, vie.notas_enc, vie.data_enc, vie.nome_comp, vie.quantidade_enc, vie.desc_comp
+    FROM public.view_itens_encomenda vie
+    WHERE vie.id_enc = id;
+END;
+$BODY$;
+

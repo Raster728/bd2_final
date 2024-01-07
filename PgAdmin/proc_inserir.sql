@@ -140,3 +140,53 @@ BEGIN
     VALUES (item_encomenda_id, enc, componente, quantidade);
 END;
 $BODY$;
+
+CREATE OR REPLACE PROCEDURE public.proc_inserir_mo_usada(
+	IN ficha_prod integer,
+	IN mo integer,
+	IN inicio timestamp without time zone,
+	IN fim timestamp without time zone)
+LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    mo_usada_id INT;
+BEGIN
+    -- Insert a new record into the table
+	SELECT nextval('public.mo_usada_id_sequence') INTO mo_usada_id;
+    INSERT INTO mo_usada (id_mo_usada, id_ficha_prod, id_mao_obra, hora_inicio, hora_fim)
+    VALUES (mo_usada_id, ficha_prod, mo, inicio, fim);
+END;
+$BODY$;
+
+CREATE OR REPLACE PROCEDURE public.proc_inserir_ficha_producao(
+	IN equipamento integer,
+	IN custo text,
+	OUT id integer)
+LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    ficha_id INT;
+BEGIN
+    -- Insert a new record into the table
+	SELECT nextval('public.ficha_producao_id_sequence') INTO ficha_id;
+    INSERT INTO ficha_producao (id_ficha_prod, id_equipamento, custo_producao)
+    VALUES (ficha_id, equipamento, custo::money);
+    id := ficha_id;
+END;
+$BODY$;
+
+CREATE OR REPLACE PROCEDURE public.proc_inserir_componentes_producao(
+	IN componente integer,
+	IN ficha_prod integer,
+	IN quantidade integer)
+LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    comp_prod_id INT;
+BEGIN
+    -- Insert a new record into the table
+	SELECT nextval('public.comp_prod_id_sequence') INTO comp_prod_id;
+    INSERT INTO componentes_producao (id_comp_prod, id_componente, id_ficha_prod, quantidade_usada)
+    VALUES (comp_prod_id, componente, ficha_prod, quantidade);
+END;
+$BODY$;

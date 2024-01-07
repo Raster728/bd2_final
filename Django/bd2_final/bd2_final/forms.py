@@ -33,6 +33,20 @@ class Armazens(forms.Form):
     setor = forms.CharField(label='Setor do armazem', max_length=100)
     notas = forms.CharField(label='Notas', max_length=100)
 
+class Ficha_Producao(forms.Form):
+    custo_producao = forms.CharField(label='Custo da producao', max_length=100)
+
+class Mao_Obra_Usada(forms.Form):
+    with connections['default'].cursor() as cursor:
+            cursor.execute("SELECT * FROM exibir_mo();")
+            mos = cursor.fetchall()
+        
+    mos_choices = [(mo[0], mo[1]) for mo in mos]
+    
+    id_mao_obra = forms.ChoiceField(choices=mos_choices, label='Mão de obra utilizada')
+    hora_inicio = forms.DateField(label='Data da Encomenda', widget=forms.TextInput(attrs={'type': 'date'}))
+    hora_fim = forms.DateField(label='Data da Encomenda', widget=forms.TextInput(attrs={'type': 'date'}))
+
 class Encomendas(forms.Form):
     with connections['default'].cursor() as cursor:
             cursor.execute("SELECT * FROM exibir_fornecedores();")
@@ -61,6 +75,16 @@ class Guia_Remessa(forms.Form):
     armazens_choices = [(armazem[0], armazem[1]) for armazem in armazens]
     armazem = forms.ChoiceField(choices=armazens_choices, label='Armazem')
     quantidade = forms.IntegerField(label='Quantidade do componente que chegou')
+
+
+class Componentes_Producao(forms.Form):
+    with connections['default'].cursor() as cursor:
+            cursor.execute("SELECT * FROM exibir_componentes();")
+            componentes = cursor.fetchall()
+        
+    componentes_choices = [(componente[0], componente[1]) for componente in componentes]
+    componente = forms.ChoiceField(choices=componentes_choices, label='Componentes')
+    quantidade_usada = forms.IntegerField(label='Quantidade do componente usado')
 
 
 class Login(forms.Form):

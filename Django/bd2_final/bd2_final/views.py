@@ -63,7 +63,7 @@ def equipamentos(request):
         columns = [col[0] for col in cursor.description]
         equipamentos = cursor.fetchall()
 
-    return render(request, 'lista.html', {'vista': equipamentos, 'columns': columns, 'tipo': 'Equipamentos'})
+    return render(request, 'equipamentos.html', {'vista': equipamentos, 'columns': columns, 'tipo': 'Equipamentos'})
 
 
 
@@ -341,8 +341,8 @@ def adicionar_clientes(request):
         form = forms.Clientes()
     return render(request, 'adicionar.html', {'form': form})
 
-def fazer_encomendas(request):
 
+def fazer_encomendas(request):
 
     if request.method == "POST":
         form = forms.Encomendas(request.POST)
@@ -412,12 +412,79 @@ def adicionar_itens_guia(request, encomenda_id, guia_id, item_id, quantidade_id)
             cur = connections['default'].cursor()
             cur.execute("call public.proc_criar_guia_remessa_com_itens(%s, %s, %s, %s, %s);", [armazem, item_id, guia_id, quantidade, quantidade_id])
             redirect_url = f'/editar_Guias/{encomenda_id}/{guia_id}/'
-            print(encomenda_id,guia_id )
             return HttpResponseRedirect(redirect_url)  
     else:
         form = forms.Guia_Remessa()
 
     return render(request, 'adicionar.html', {'form': form, 'tipo': 'Guias', 'guia': guia_id, 'encomenda': encomenda_id})
+
+
+
+def criar_equipamentos(request):
+    if request.method == "POST":
+        form = forms.Equipamentos(request.POST)
+        if form.is_valid():
+            nome_equipamento = form.cleaned_data['nome_equipamento']
+            tipo = form.cleaned_data['tipo']
+            cur = connections['default'].cursor()
+            cur.execute("call public.proc_inserir_equipamento(%s, %s);", [nome_equipamento, tipo])
+            return redirect('http://127.0.0.1:8000/equipamentos')
+    else:
+        form = forms.Equipamentos()
+
+    return render(request, 'adicionar.html', {'form': form})
+
+def criar_Ficha_Producao(request, equipamento_id):
+    if request.method == "POST":
+        form = forms.Ficha_Producao(request.POST)
+        if form.is_valid():
+            custo_producao = form.cleaned_data['custo_producao']
+            cur = connections['default'].cursor()
+            cur.execute("call public.proc_inserir_ficha_producao(%s, %s, NULL);", [equipamento_id, custo_producao])
+            id_output = cur.fetchone()[0]
+            redirect_url = f'/criar_Ficha_Item/{id_output}/'
+            return HttpResponseRedirect(redirect_url)  
+    else:
+        form = forms.Ficha_Producao()
+
+    return render(request, 'adicionar.html', {'form': form})
+
+def itens_ficha_prod(request, ficha_prod_id):
+    with connections['default'].cursor() as cursor:
+
+        cursor.execute("SELECT * FROM func_comp_ficha_id_com_id(%s);", [ficha_prod_id])
+        columns = [col[0] for col in cursor.description]
+        encomendas = cursor.fetchall()
+
+    if request.method == "POST":
+        form = forms.Componentes_Producao(request.POST)
+        if form.is_valid():
+            componente = form.cleaned_data['componente']
+            quantidade_usada = form.cleaned_data['quantidade_usada']
+            cur = connections['default'].cursor()
+            cur.execute("call public.proc_inserir_componentes_producao(%s, %s, %s);", [componente, ficha_prod_id, quantidade_usada])
+            redirect_url = f'/criar_Ficha_Item/{ficha_prod_id}/'
+            return HttpResponseRedirect(redirect_url)  
+    else:
+        form = forms.Componentes_Producao()
+
+    return render(request, 'criar_ficha_comp.html', {'form': form, 'vista': encomendas, 'columns': columns, 'ficha': ficha_prod_id})
+
+def mo_ficha_prod(request, ficha_prod_id):
+
+    if request.method == "POST":
+        form = forms.Mao_Obra_Usada(request.POST)
+        if form.is_valid():
+            id_mao_obra = form.cleaned_data['id_mao_obra']
+            hora_inicio = form.cleaned_data['hora_inicio']
+            hora_fim = form.cleaned_data['hora_fim']
+            cur = connections['default'].cursor()
+            cur.execute("call public.proc_inserir_mo_usada(%s, %s, %s, %s);", [ficha_prod_id, id_mao_obra, hora_inicio, hora_fim])
+            return redirect('http://127.0.0.1:8000/equipamentos')
+    else:
+        form = forms.Mao_Obra_Usada()
+
+    return render(request, 'adicionar.html', {'form': form})
 
 
 #############################################################  LOGIN  ##########################################################################################

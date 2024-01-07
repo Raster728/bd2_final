@@ -71,5 +71,5 @@ urlpatterns = [
     path('criar_Ficha_MO/<int:ficha_prod_id>/', views.mo_ficha_prod, name='criar_Ficha_MO'),
     #############################################################  MONGO  ##########################################################################################
 
-    path('exportar_Equipamentos/<int:equipamentos_id>/', views.exportar_equipamento, name='exportar'),
+    path('exportar_Equipamentos_armazenados/<int:equipamentos_id>/', views.exportar_equipamento, name='exportar'),
 ]

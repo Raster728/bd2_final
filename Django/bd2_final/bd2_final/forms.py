@@ -92,7 +92,11 @@ class Login(forms.Form):
     password = forms.CharField(label='Palavra-Passe', max_length=100)
 
 class EquipamentosExportados(forms.Form):
-    pgsid_eq_arm = forms.CharField(label='ID do equipamento')
+    with connections['default'].cursor() as cursor:
+            cursor.execute("SELECT * FROM exibir_equipamentos_armazenados();")
+            eq_arms = cursor.fetchall()
+    eq_arms_choices = [(eq_arm[0], eq_arm[4]) for eq_arm in eq_arms]     
+    pgsid_eq_arm = forms.ChoiceField(choices=eq_arms_choices,label='ID do equipamento')
     nome_equipamento = forms.CharField(label='Nome do equipamento', max_length=100)
     atributoum = forms.CharField(label='Novo Atributo', max_length=100)
     valorum = forms.CharField(label='Valor', max_length=100)

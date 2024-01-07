@@ -75,7 +75,7 @@ def equipamentos_armazenados(request):
         columns = [col[0] for col in cursor.description]
         equipamentos_armazenados = cursor.fetchall()
 
-    return render(request, 'lista.html', {'vista': equipamentos_armazenados, 'columns': columns, 'tipo': 'Equipamentos_armazenados'})
+    return render(request, 'equipamentos_armazenados.html', {'vista': equipamentos_armazenados, 'columns': columns, 'tipo': 'Equipamentos_armazenados'})
 
 def fatura_and_items(request):
     
@@ -531,7 +531,7 @@ def exportar_equipamento(request, equipamentos_id):
             valorquatro = form.cleaned_data['valorquatro']
 
             db = conexaomongo
-            equipamentos_collection = db.equipamentos
+            produtos_collection = db["produtos"]
 
             novo_equipamento = {
                 'pgsid_eq_arm': pgsid_eq_arm,
@@ -542,7 +542,7 @@ def exportar_equipamento(request, equipamentos_id):
                 atributoquatro : valorquatro,
             }
 
-            equipamentos_collection.insert_one(novo_equipamento)
+            produtos_collection.insert_one(novo_equipamento)
                 
             return redirect('http://127.0.0.1:8000/equipamentos')
 

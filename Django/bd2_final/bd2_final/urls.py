@@ -64,4 +64,8 @@ urlpatterns = [
     path('adicionar_Guias', views.escolher_enc_para_guia, name='adicionar_Encomenda_guia'),
     path('editar_Guias/<int:encomenda_id>/<int:guia_id>/', views.criar_guia, name='adicionar_Guias_item'),
     path('editar_Guias/<int:encomenda_id>/<int:guia_id>/<int:item_id>/<int:quantidade_id>', views.adicionar_itens_guia, name='adicionar_Guias_item_retirar'),
+
+    #############################################################  MONGO  ##########################################################################################
+
+    path('exportar_Equipamentos/<int:equipamentos_id>/', views.exportar_equipamento, name='exportar'),
 ]

@@ -66,3 +66,15 @@ class Guia_Remessa(forms.Form):
 class Login(forms.Form):
     username = forms.CharField(label='Nome do utilizador', max_length=100)
     password = forms.CharField(label='Palavra-Passe', max_length=100)
+
+class EquipamentosExportados(forms.Form):
+    pgsid_eq_arm = forms.CharField(label='ID do equipamento')
+    nome_equipamento = forms.CharField(label='Nome do equipamento', max_length=100)
+    atributoum = forms.CharField(label='Novo Atributo', max_length=100)
+    valorum = forms.CharField(label='Valor', max_length=100)
+    atributodois = forms.CharField(label='Novo Atributo', max_length=100)
+    valordois = forms.CharField(label='Valor', max_length=100)
+    atributotres = forms.CharField(label='Novo Atributo', max_length=100)
+    valortres = forms.CharField(label='Valor', max_length=100)
+    atributoquatro = forms.CharField(label='Novo Atributo', max_length=100)
+    valorquatro = forms.CharField(label='Valor', max_length=100)

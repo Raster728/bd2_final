@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+        }
+
+        th,
+        td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #e6e6e6;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .atributo.adicional {
+            margin-bottom: 10px; 
+        }
+    </style>
+    
+</head>
+
+<body>
+    {% include 'sidebar.html' %}
+
+    <div class="content">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.pgsid_eq_arm.label_tag }} {{ form.pgsid_eq_arm }} <br><br>
+            {{ form.nome_equipamento.label_tag }} {{ form.nome_equipamento }}
+            <br><br>
+            <div id="atributos-dinamicos">
+                <div class="atributo adicional hidden">
+                    {{ form.atributoum.label_tag }} {{ form.atributoum }} {{ form.valorum.label_tag }} {{ form.valorum }}
+                </div>
+                <div class="atributo adicional hidden">
+                    {{ form.atributodois.label_tag }} {{ form.atributodois }} {{ form.valordois.label_tag }} {{ form.valordois }}
+                </div>
+                <div class="atributo adicional hidden">
+                    {{ form.atributotres.label_tag }} {{ form.atributotres }} {{ form.valortres.label_tag }} {{ form.valortres }}
+                </div>
+                <div class="atributo adicional hidden">
+                    {{ form.atributoquatro.label_tag }} {{ form.atributoquatro }} {{ form.valorquatro.label_tag }} {{ form.valorquatro }}
+                </div>
+            </div>
+
+
+            <button type="button" onclick="adicionarAtributo()">Adicionar Atributo</button>
+            <button type="submit">Guardar</button>
+        </form>
+    </div>
+
+    <script>
+        function esconderAtributos() {
+            const atributosAdicionais = document.querySelectorAll('.atributo.adicional');
+            atributosAdicionais.forEach(atributo => {
+                atributo.classList.add('hidden');
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            esconderAtributos();
+        });
+
+        function adicionarAtributo() {
+            const atributoAdicional = document.querySelector('.atributo.adicional.hidden');
+
+            if (atributoAdicional) {
+                atributoAdicional.classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+
+</html>

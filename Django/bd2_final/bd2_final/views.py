@@ -508,5 +508,46 @@ def login_view(request):
 
 #############################################################  EXPORTAR PARA MONGO  ##########################################################################################
 
+def exportar_equipamento(request, equipamentos_id):
+    with connections['default'].cursor() as cursor:
+        query = "SELECT * FROM func_equipamento_nome(%s);"
+        cursor.execute(query, [equipamentos_id])
+        columns = [col[0] for col in cursor.description]
+        equipamentos = cursor.fetchall()
 
+    if request.method == 'POST':
+        form = forms.EquipamentosExportados(request.POST)
+
+        if form.is_valid():
+            pgsid_eq_arm = form.cleaned_data['pgsid_eq_arm']
+            nome_equipamento = form.cleaned_data['nome_equipamento']
+            atributoum = form.cleaned_data['atributoum']
+            valorum = form.cleaned_data['valorum']
+            atributodois = form.cleaned_data['atributodois']
+            valordois = form.cleaned_data['valordois']
+            atributotres = form.cleaned_data['atributotres']
+            valortres = form.cleaned_data['valortres']
+            atributoquatro = form.cleaned_data['atributoquatro']
+            valorquatro = form.cleaned_data['valorquatro']
+
+            db = conexaomongo
+            equipamentos_collection = db.equipamentos
+
+            novo_equipamento = {
+                'pgsid_eq_arm': pgsid_eq_arm,
+                'nome_equipamento': nome_equipamento,
+                atributoum : valorum,
+                atributodois : valordois,
+                atributotres : valortres,
+                atributoquatro : valorquatro,
+            }
+
+            equipamentos_collection.insert_one(novo_equipamento)
+                
+            return redirect('http://127.0.0.1:8000/equipamentos')
+
+    else:
+        form = forms.EquipamentosExportados()  
+        
+    return render(request, 'exportar.html', {'form': form, 'columns': columns, 'equipamentos': equipamentos})
     

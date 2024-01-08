@@ -15,12 +15,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_armazem
 	AFTER INSERT OR DELETE ON armazem
 	FOR EACH ROW
-	EXECUTE FUNCTION id_armazem()
+	EXECUTE FUNCTION id_armazem();
 	
 CREATE FUNCTION id_cliente()
 	RETURNS TRIGGER 
@@ -39,12 +39,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_cliente
 	AFTER INSERT OR DELETE ON clientes
 	FOR EACH ROW
-	EXECUTE FUNCTION id_cliente()
+	EXECUTE FUNCTION id_cliente();
 	
 CREATE FUNCTION id_componente()
 	RETURNS TRIGGER 
@@ -63,12 +63,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_componente
 	AFTER INSERT OR DELETE ON componentes
 	FOR EACH ROW
-	EXECUTE FUNCTION id_componente()
+	EXECUTE FUNCTION id_componente();
 	
 CREATE FUNCTION id_comp_prod()
 	RETURNS TRIGGER 
@@ -87,12 +87,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_comp_prod
 	AFTER INSERT OR DELETE ON componentes_producao
 	FOR EACH ROW
-	EXECUTE FUNCTION id_comp_prod()
+	EXECUTE FUNCTION id_comp_prod();
 	
 CREATE FUNCTION id_encomenda()
 	RETURNS TRIGGER 
@@ -111,12 +111,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_encomenda
 	AFTER INSERT OR DELETE ON encomenda
 	FOR EACH ROW
-	EXECUTE FUNCTION id_encomenda()
+	EXECUTE FUNCTION id_encomenda();
 	
 CREATE FUNCTION id_equipamento()
 	RETURNS TRIGGER 
@@ -135,12 +135,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_equipamento
 	AFTER INSERT OR DELETE ON equipamentos
 	FOR EACH ROW
-	EXECUTE FUNCTION id_equipamento()
+	EXECUTE FUNCTION id_equipamento();
 	
 CREATE FUNCTION id_equipamentos_armazenados()
 	RETURNS TRIGGER 
@@ -159,12 +159,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_equipamentos_armazenados
 	AFTER INSERT OR DELETE ON equipamnetos_arm
 	FOR EACH ROW
-	EXECUTE FUNCTION id_equipamentos_armazenados()
+	EXECUTE FUNCTION id_equipamentos_armazenados();
 	
 CREATE FUNCTION id_fatura_encomenda()
 	RETURNS TRIGGER 
@@ -183,12 +183,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_fatura_encomenda
 	AFTER INSERT OR DELETE ON fatura_encomenda
 	FOR EACH ROW
-	EXECUTE FUNCTION id_fatura_encomenda()
+	EXECUTE FUNCTION id_fatura_encomenda();
 	
 CREATE FUNCTION id_fatura_venda()
 	RETURNS TRIGGER 
@@ -207,12 +207,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_fatura_venda
 	AFTER INSERT OR DELETE ON fatura_venda
 	FOR EACH ROW
-	EXECUTE FUNCTION id_fatura_venda()
+	EXECUTE FUNCTION id_fatura_venda();
 	
 CREATE FUNCTION id_ficha_producao()
 	RETURNS TRIGGER 
@@ -231,12 +231,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_ficha_producao
 	AFTER INSERT OR DELETE ON ficha_producao
 	FOR EACH ROW
-	EXECUTE FUNCTION id_ficha_producao()
+	EXECUTE FUNCTION id_ficha_producao();
 	
 CREATE FUNCTION id_fornecedores()
 	RETURNS TRIGGER 
@@ -255,12 +255,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_fornecedores
 	AFTER INSERT OR DELETE ON fornecedores
 	FOR EACH ROW
-	EXECUTE FUNCTION id_fornecedores()
+	EXECUTE FUNCTION id_fornecedores();
 	
 CREATE FUNCTION id_guia_remessa()
 	RETURNS TRIGGER 
@@ -279,12 +279,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_guia_remessa
 	AFTER INSERT OR DELETE ON guia_remessa
 	FOR EACH ROW
-	EXECUTE FUNCTION id_guia_remessa()
+	EXECUTE FUNCTION id_guia_remessa();
 	
 CREATE FUNCTION id_item_encomenda()
 	RETURNS TRIGGER 
@@ -303,12 +303,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_item_encomenda
 	AFTER INSERT OR DELETE ON item_enc
 	FOR EACH ROW
-	EXECUTE FUNCTION id_item_encomenda()
+	EXECUTE FUNCTION id_item_encomenda();
 	
 CREATE FUNCTION id_item_fatura_encomenda()
 	RETURNS TRIGGER 
@@ -327,12 +327,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_item_fatura_encomenda
 	AFTER INSERT OR DELETE ON item_fatura_enc
 	FOR EACH ROW
-	EXECUTE FUNCTION id_item_fatura_encomenda()
+	EXECUTE FUNCTION id_item_fatura_encomenda();
 
 CREATE FUNCTION id_itens_remessa()
 	RETURNS TRIGGER 
@@ -351,12 +351,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_itens_remessa
 	AFTER INSERT OR DELETE ON itens_remessa
 	FOR EACH ROW
-	EXECUTE FUNCTION id_itens_remessa()
+	EXECUTE FUNCTION id_itens_remessa();
 	
 CREATE FUNCTION id_mao_obra()
 	RETURNS TRIGGER 
@@ -375,12 +375,12 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_mao_obra
 	AFTER INSERT OR DELETE ON mao_obra
 	FOR EACH ROW
-	EXECUTE FUNCTION id_mao_obra()
+	EXECUTE FUNCTION id_mao_obra();
 	
 CREATE FUNCTION id_mao_obra_usada()
 	RETURNS TRIGGER 
@@ -399,9 +399,9 @@ BEGIN
 	END IF;
 	RETURN NEW;
 END;
-$$
+$$;
 
 CREATE TRIGGER gestao_id_mao_obra_usada
 	AFTER INSERT OR DELETE ON mo_usada
 	FOR EACH ROW
-	EXECUTE FUNCTION id_mao_obra_usada()
+	EXECUTE FUNCTION id_mao_obra_usada();

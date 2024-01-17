@@ -795,4 +795,3 @@ def user_login(request):
 def custom_logout(request):
     logout(request)
     return redirect('http://127.0.0.1:8000/')
-

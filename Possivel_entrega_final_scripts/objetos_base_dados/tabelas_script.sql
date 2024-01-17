@@ -9,6 +9,40 @@ CREATE TABLE IF NOT EXISTS public.armazem
 
 TABLESPACE pg_default;
 
+CREATE TABLE IF NOT EXISTS public.fornecedores
+(
+    id_forn integer NOT NULL DEFAULT nextval('fornecedor_id_sequence'::regclass),
+    nome_forn text COLLATE pg_catalog."default",
+    CONSTRAINT pk_fornecedores PRIMARY KEY (id_forn)
+)
+
+TABLESPACE pg_default;
+
+CREATE TABLE IF NOT EXISTS public.equipamentos
+(
+    id_equipamento integer NOT NULL DEFAULT nextval('equipamentos_id_sequence'::regclass),
+    nome_equipamento text COLLATE pg_catalog."default",
+    tipo text COLLATE pg_catalog."default",
+    CONSTRAINT pk_equipamentos PRIMARY KEY (id_equipamento)
+)
+
+TABLESPACE pg_default;
+
+
+CREATE TABLE IF NOT EXISTS public.ficha_producao
+(
+    id_ficha_prod integer NOT NULL DEFAULT nextval('ficha_producao_id_sequence'::regclass),
+    id_equipamento integer,
+    custo_producao money,
+    CONSTRAINT pk_ficha_producao PRIMARY KEY (id_ficha_prod),
+    CONSTRAINT fk_ficha_pr_relations_equipame FOREIGN KEY (id_equipamento)
+        REFERENCES public.equipamentos (id_equipamento) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
 
 CREATE TABLE IF NOT EXISTS public.clientes
 (
@@ -68,12 +102,21 @@ CREATE TABLE IF NOT EXISTS public.encomenda
 TABLESPACE pg_default;
 
 
-CREATE TABLE IF NOT EXISTS public.equipamentos
+CREATE TABLE IF NOT EXISTS public.item_enc
 (
-    id_equipamento integer NOT NULL DEFAULT nextval('equipamentos_id_sequence'::regclass),
-    nome_equipamento text COLLATE pg_catalog."default",
-    tipo text COLLATE pg_catalog."default",
-    CONSTRAINT pk_equipamentos PRIMARY KEY (id_equipamento)
+    id_item_enc integer NOT NULL DEFAULT nextval('item_enc_sequence'::regclass),
+    id_enc integer,
+    id_componente integer,
+    quantidade_enc integer,
+    CONSTRAINT pk_item_enc PRIMARY KEY (id_item_enc),
+    CONSTRAINT fk_item_enc_relations_componen FOREIGN KEY (id_componente)
+        REFERENCES public.componentes (id_componente) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_item_enc_relations_encomend FOREIGN KEY (id_enc)
+        REFERENCES public.encomenda (id_enc) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
 )
 
 TABLESPACE pg_default;
@@ -125,29 +168,6 @@ CREATE TABLE IF NOT EXISTS public.fatura_venda
 TABLESPACE pg_default;
 
 
-CREATE TABLE IF NOT EXISTS public.ficha_producao
-(
-    id_ficha_prod integer NOT NULL DEFAULT nextval('ficha_producao_id_sequence'::regclass),
-    id_equipamento integer,
-    custo_producao money,
-    CONSTRAINT pk_ficha_producao PRIMARY KEY (id_ficha_prod),
-    CONSTRAINT fk_ficha_pr_relations_equipame FOREIGN KEY (id_equipamento)
-        REFERENCES public.equipamentos (id_equipamento) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-)
-
-TABLESPACE pg_default;
-
-
-CREATE TABLE IF NOT EXISTS public.fornecedores
-(
-    id_forn integer NOT NULL DEFAULT nextval('fornecedor_id_sequence'::regclass),
-    nome_forn text COLLATE pg_catalog."default",
-    CONSTRAINT pk_fornecedores PRIMARY KEY (id_forn)
-)
-
-TABLESPACE pg_default;
 
 
 CREATE TABLE IF NOT EXISTS public.guia_remessa
@@ -159,20 +179,24 @@ CREATE TABLE IF NOT EXISTS public.guia_remessa
 
 TABLESPACE pg_default;
 
-
-CREATE TABLE IF NOT EXISTS public.item_enc
+CREATE TABLE IF NOT EXISTS public.itens_remessa
 (
-    id_item_enc integer NOT NULL DEFAULT nextval('item_enc_sequence'::regclass),
-    id_enc integer,
-    id_componente integer,
-    quantidade_enc integer,
-    CONSTRAINT pk_item_enc PRIMARY KEY (id_item_enc),
-    CONSTRAINT fk_item_enc_relations_componen FOREIGN KEY (id_componente)
-        REFERENCES public.componentes (id_componente) MATCH SIMPLE
+    id_item_remessa integer NOT NULL DEFAULT nextval('item_remessa_id_sequence'::regclass),
+    id_armazem integer,
+    id_item_enc integer,
+    id_guia_remessa integer,
+    quantidade_remessa integer,
+    CONSTRAINT pk_itens_remessa PRIMARY KEY (id_item_remessa),
+    CONSTRAINT fk_itens_re_relations_armazem FOREIGN KEY (id_armazem)
+        REFERENCES public.armazem (id_armazem) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT fk_item_enc_relations_encomend FOREIGN KEY (id_enc)
-        REFERENCES public.encomenda (id_enc) MATCH SIMPLE
+    CONSTRAINT fk_itens_re_relations_guia_rem FOREIGN KEY (id_guia_remessa)
+        REFERENCES public.guia_remessa (id_guia_remessa) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_itens_re_relations_item_enc FOREIGN KEY (id_item_enc)
+        REFERENCES public.item_enc (id_item_enc) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
@@ -219,30 +243,6 @@ CREATE TABLE IF NOT EXISTS public.itens_fatura_venda
 
 TABLESPACE pg_default;
 
-
-CREATE TABLE IF NOT EXISTS public.itens_remessa
-(
-    id_item_remessa integer NOT NULL DEFAULT nextval('item_remessa_id_sequence'::regclass),
-    id_armazem integer,
-    id_item_enc integer,
-    id_guia_remessa integer,
-    quantidade_remessa integer,
-    CONSTRAINT pk_itens_remessa PRIMARY KEY (id_item_remessa),
-    CONSTRAINT fk_itens_re_relations_armazem FOREIGN KEY (id_armazem)
-        REFERENCES public.armazem (id_armazem) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT fk_itens_re_relations_guia_rem FOREIGN KEY (id_guia_remessa)
-        REFERENCES public.guia_remessa (id_guia_remessa) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT fk_itens_re_relations_item_enc FOREIGN KEY (id_item_enc)
-        REFERENCES public.item_enc (id_item_enc) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-)
-
-TABLESPACE pg_default;
 
 
 CREATE TABLE IF NOT EXISTS public.mao_obra

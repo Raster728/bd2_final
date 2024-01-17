@@ -20,18 +20,33 @@ CREATE OR REPLACE VIEW public.view_componentes
    FROM componentes;
    
    
+CREATE OR REPLACE VIEW public.view_componentes_prod
+ AS
+ SELECT componentes_producao.id_componente,
+    sum(componentes_producao.quantidade_usada) AS quantidade_usada
+   FROM componentes_producao
+  GROUP BY componentes_producao.id_componente; 
+   
+   
+CREATE OR REPLACE VIEW public.view_quant_remessa
+ AS
+ SELECT c.id_componente,
+    COALESCE(sum(ir.quantidade_remessa), 0::bigint) AS quant_remessa
+   FROM componentes c
+     LEFT JOIN item_enc ie ON c.id_componente = ie.id_componente
+     LEFT JOIN itens_remessa ir ON ir.id_item_enc = ie.id_item_enc
+  GROUP BY c.id_componente;
+  
+   
 CREATE OR REPLACE VIEW public.view_componentes_em_stock
  AS
  SELECT c.id_componente,
-    COALESCE(sum(ir.quantidade_remessa), 0::bigint) - COALESCE(vcp.quantidade_usada, 0::bigint) AS quantidade_stock,
+    vqr.quant_remessa - COALESCE(vcp.quantidade_usada, 0::bigint) AS quantidade_stock,
     c.nome_comp
    FROM componentes c
      LEFT JOIN view_componentes_prod vcp ON c.id_componente = vcp.id_componente
-     LEFT JOIN item_enc ie ON c.id_componente = ie.id_componente
-     LEFT JOIN itens_remessa ir ON ir.id_item_enc = ie.id_item_enc
-  GROUP BY c.id_componente, ir.quantidade_remessa, vcp.quantidade_usada
- HAVING (COALESCE(sum(ir.quantidade_remessa), 0::bigint) - COALESCE(vcp.quantidade_usada, 0::bigint)) > 0;
- 
+     LEFT JOIN view_quant_remessa vqr ON c.id_componente = vqr.id_componente
+  WHERE (vqr.quant_remessa - COALESCE(vcp.quantidade_usada, 0::bigint)) > 0;
  
  
    
@@ -45,14 +60,6 @@ CREATE OR REPLACE VIEW public.view_componentes_por_fp
      LEFT JOIN equipamentos e ON fp.id_equipamento = e.id_equipamento
      LEFT JOIN componentes_producao cp ON fp.id_ficha_prod = cp.id_ficha_prod
      LEFT JOIN componentes c ON c.id_componente = cp.id_componente;
-	 
-	 
-CREATE OR REPLACE VIEW public.view_componentes_prod
- AS
- SELECT componentes_producao.id_componente,
-    sum(componentes_producao.quantidade_usada) AS quantidade_usada
-   FROM componentes_producao
-  GROUP BY componentes_producao.id_componente; 
 	 
 	 
 	 

@@ -44,13 +44,39 @@
 
 <body>
     <div class="sidebar">
+
         <ul>
-            <li><a href="/componentes">Lista de componentes</a></li>
+            {% if role == 'producao' %}
             <li><a href="/equipamentos">Lista de equipamentos</a></li>
+            <li><a href="/componentes">Lista de componentes</a></li>
+            <li><a href="/comp_stock">Lista de componentes em stock</a></li>
+            {% endif %}
+
+            
+
+            {% if role == 'vendedor' %}
             <li><a href="/clientes">Lista de clientes</a></li>
+            <li><a href="/produtos">Equipamentos para venda</a></li>
+            <li><a href="/equipamentos_armazenados">Lista de equipamentos armazenados</a></li>
+            {% endif %}
+
+            {% if role == 'armazem' %}
             <li><a href="/armazens">Lista de armazens</a></li>
-            <li><a href="/encomendas">Lista de encomendas</a></li>
             <li><a href="/guia_remessa">Lista de guias de remessa</a></li>
+            <li><a href="/fatura_encomenda">Lista de faturas das encomendas</a></li>
+            
+            {% endif %}
+
+            {% if role == 'encomenda' %}
+            <li><a href="/encomendas">Lista de encomendas</a></li>
+            {% endif %}
+
+            
+            
+            
+
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+            
         </ul>
     </div>
 </body>

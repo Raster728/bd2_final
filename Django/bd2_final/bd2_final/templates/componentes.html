@@ -71,12 +71,18 @@
                     <td>{{ field }}</td>
                     {% endfor %}
                     <td>
-                        <button><a href="/editar_{{tipo}}/{{row.0}}/{{guia}}/{{fatura}}">Criar guia de remessa</a></button>
+                        <button><a href="/editar_{{tipo}}/{{row.0}}">Editar</a></button>
+                        <button>Eliminar</button>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <form action="{% url 'componentes_import_json' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="arquivo" accept=".json">
+            <button type="submit">Enviar</button>
+        </form>
     </div>
 
 </body>

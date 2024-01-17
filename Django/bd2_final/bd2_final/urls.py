@@ -22,9 +22,11 @@ from . import views
 urlpatterns = [
 
     #############################################################  ADMIN  ##########################################################################################
+    path('', views.user_login, name='login'),
+    path('logout/', views.custom_logout, name='logout'),
 
-    path ('', views.index, name='index'), 
-    path('login/', views.login_view, name='login'),
+    path ('dashboard', views.index, name='index'), 
+    
     path('Vendas/', views.clientes, name='vendas'),
     path('Producao/', views.equipamentos, name='producao'),
     path('Encomendas/', views.encomendas, name='encomendas'),
@@ -44,6 +46,9 @@ urlpatterns = [
     path('itens_encomenda', views.itens_encomenda, name="vista_itens_encomenda"),
     path('itens_remessa', views.itens_remessa, name="vista_itens_remessa"),
     path('mao_obra', views.mao_obra, name="vista_mao_obra"),
+    path('comp_stock', views.comp_stock, name="comp_stock"),
+
+    
 
     #############################################################  UPDATE  ##########################################################################################
 
@@ -60,16 +65,36 @@ urlpatterns = [
     path('adicionar_Clientes', views.adicionar_clientes, name='adicionar_Clientes'),
     path('adicionar_Encomendas', views.fazer_encomendas, name='adicionar_Encomenda'),
     path('adicionar_Encomendas/<int:encomenda_id>/', views.fazer_encomendas_2, name='adicionar_Encomenda_item'),
+    path('export-encomendas/json/', views.export_encomendas_json, name='export_to_json'),
 
     path('adicionar_Guias', views.escolher_enc_para_guia, name='adicionar_Encomenda_guia'),
     path('editar_Guias/<int:encomenda_id>/<int:guia_id>/', views.criar_guia, name='adicionar_Guias_item'),
     path('editar_Guias/<int:encomenda_id>/<int:guia_id>/<int:item_id>/<int:quantidade_id>', views.adicionar_itens_guia, name='adicionar_Guias_item_retirar'),
+    path('fatura_encomenda/<int:guia_id>/<int:encomenda_id>/<int:fatura_id>/', views.criar_fatura_enc, name='fatura_encomenda'),
+    path('fatura/<int:guia_id>/<int:encomenda_id>/', views.fatura, name='fatura'),
+    path('preco_item/<int:item_id>/<int:fatura_id>/<int:guia_id>/<int:encomenda_id>/', views.preco_por_item, name='preco_item'),
 
     path('adicionar_Equipamentos', views.criar_equipamentos, name='adicionar_Equipamentos'),
     path('criar_Ficha/<int:equipamento_id>/', views.criar_Ficha_Producao, name='adicionar_Ficha'),
     path('criar_Ficha_Item/<int:ficha_prod_id>/', views.itens_ficha_prod, name='criar_Ficha_Itens'),
     path('criar_Ficha_MO/<int:ficha_prod_id>/', views.mo_ficha_prod, name='criar_Ficha_MO'),
+
+
+    path('componentes_import_json', views.componentes_import_json, name="componentes_import_json"),
     #############################################################  MONGO  ##########################################################################################
 
     path('exportar_Equipamentos_armazenados/<int:equipamentos_id>/', views.exportar_equipamento, name='exportar'),
+
+    #############################################################  VENDER PRODUTO  ##########################################################################################
+
+    path('produtos', views.produtos, name='produtos'),
+    path('vender_produto/<int:eq_id>/<int:cliente_id>', views.vender_produto, name='vender_produto'),
+    path('ver_produto/<int:eq_id>', views.ver_produto, name='ver_produto'),
+    path('produtos/<int:cliente_id>', views.produtos_cliente, name='produtos_cliente'),
+    path('escolher_cliente/', views.escolher_cliente, name='escolher_cliente'),
+
+    path('carrinho/<int:cliente_id>', views.carrinho, name='carrinho'),
+    path('concluir_compra/<int:cliente_id>', views.concluir_compra, name='concluir_compra'),
+    
+
 ]

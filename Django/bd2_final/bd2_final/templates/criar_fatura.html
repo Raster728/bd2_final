@@ -71,12 +71,15 @@
                     <td>{{ field }}</td>
                     {% endfor %}
                     <td>
-                        <button><a href="/editar_{{tipo}}/{{row.0}}/{{guia}}/{{fatura}}">Criar guia de remessa</a></button>
+                        {% if row.7 == None %}
+                            <button><a href="/preco_item/{{row.1}}/{{fatura}}/{{guia}}/{{encomenda}}">Preco por item</a></button>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <button><a href="/fatura_encomenda">Concluido</a></button>
     </div>
 
 </body>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,32 +54,10 @@
 <body>
     {% include 'sidebar.html' %}
     <div class="content">
-        <h1>{{ tipo }}</h1>
-        <table>
-            <thead>
-                <tr>
-                    {% for col in columns %}
-                    <th>{{ col }}</th>
-                    {% endfor %}
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in vista %}
-                <tr>
-                    <!-- Loop through the data rows -->
-                    {% for field in row %}
-                    <td>{{ field }}</td>
-                    {% endfor %}
-                    <td>
-                        <button><a href="/editar_{{tipo}}/{{row.0}}/{{guia}}/{{fatura}}">Criar guia de remessa</a></button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <button><a href="/fatura_encomenda/{{guia}}/{{encomenda}}/{{fatura}}">Preco por item</a></button>
     </div>
 
 </body>
 
 </html>
+

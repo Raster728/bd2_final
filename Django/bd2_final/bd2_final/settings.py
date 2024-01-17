@@ -77,6 +77,13 @@ WSGI_APPLICATION = 'bd2_final.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    'mongo': {
+        'ENGINE': 'djongo',
+        'NAME': 'trabalho_final',
+        'HOST' : 'mongodb://localhost:27017/',
+        'ENFORCE_SCHEMA': False,
+    },
+
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'trabalho_final',
@@ -84,12 +91,6 @@ DATABASES = {
         'PASSWORD': '12345',
         'HOST': 'localhost',
         'PORT': '5432'
-    },
-    'mongo': {
-        'ENGINE': 'djongo',
-        'NAME': 'trabalho_final',
-        'HOST' : 'mongodb://localhost:27017/',
-        'ENFORCE_SCHEMA': False,
     }
 }
 
@@ -111,6 +112,11 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    # Add other backends as needed
+]
+AUTH_USER_MODEL = 'bd2_final.CustomUser'
 
 
 # Internationalization

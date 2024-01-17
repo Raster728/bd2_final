@@ -1,0 +1,1 @@
+No django, fazer makemigrations e migrate para que o login seja possivel

@@ -62,50 +62,12 @@
     <div class="content">
         <form method="POST">
             {% csrf_token %}
-            {{ form.pgsid_eq_arm.label_tag }} {{ form.pgsid_eq_arm }} <br><br>
-            {{ form.nome_equipamento.label_tag }} {{ form.nome_equipamento }}
-            <br><br>
-            <div id="atributos-dinamicos">
-                <div class="atributo adicional hidden">
-                    {{ form.atributoum.label_tag }} {{ form.atributoum }} {{ form.valorum.label_tag }} {{ form.valorum }}
-                </div>
-                <div class="atributo adicional hidden">
-                    {{ form.atributodois.label_tag }} {{ form.atributodois }} {{ form.valordois.label_tag }} {{ form.valordois }}
-                </div>
-                <div class="atributo adicional hidden">
-                    {{ form.atributotres.label_tag }} {{ form.atributotres }} {{ form.valortres.label_tag }} {{ form.valortres }}
-                </div>
-                <div class="atributo adicional hidden">
-                    {{ form.atributoquatro.label_tag }} {{ form.atributoquatro }} {{ form.valorquatro.label_tag }} {{ form.valorquatro }}
-                </div>
-            </div>
-
-
-            <button type="button" onclick="adicionarAtributo()">Adicionar Atributo</button>
+            {{ form.as_p}}
             <button type="submit">Guardar</button>
         </form>
     </div>
 
-    <script>
-        function esconderAtributos() {
-            const atributosAdicionais = document.querySelectorAll('.atributo.adicional');
-            atributosAdicionais.forEach(atributo => {
-                atributo.classList.add('hidden');
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            esconderAtributos();
-        });
-
-        function adicionarAtributo() {
-            const atributoAdicional = document.querySelector('.atributo.adicional.hidden');
-
-            if (atributoAdicional) {
-                atributoAdicional.classList.remove('hidden');
-            }
-        }
-    </script>
+    
 </body>
 
 </html>

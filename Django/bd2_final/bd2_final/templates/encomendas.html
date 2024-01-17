@@ -71,12 +71,14 @@
                     <td>{{ field }}</td>
                     {% endfor %}
                     <td>
-                        <button><a href="/editar_{{tipo}}/{{row.0}}/{{guia}}/{{fatura}}">Criar guia de remessa</a></button>
+                        <button><a href="/editar_{{tipo}}/{{row.0}}">Editar</a></button>
+                        <a href="{% url 'export_to_json' %}" download>Exportar Encomenda</a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <button><a href="/adicionar_{{tipo}}">Adicionar</a></button>
     </div>
 
 </body>

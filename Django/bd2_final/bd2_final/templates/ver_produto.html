@@ -48,35 +48,33 @@
             background-color: #e6e6e6;
         }
     </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
 <body>
     {% include 'sidebar.html' %}
+
     <div class="content">
-        <h1>{{ tipo }}</h1>
-        <table>
-            <thead>
-                <tr>
-                    {% for col in columns %}
-                    <th>{{ col }}</th>
-                    {% endfor %}
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in vista %}
-                <tr>
-                    <!-- Loop through the data rows -->
-                    {% for field in row %}
-                    <td>{{ field }}</td>
-                    {% endfor %}
-                    <td>
-                        <button><a href="/editar_{{tipo}}/{{row.0}}/{{guia}}/{{fatura}}">Criar guia de remessa</a></button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <h1>Produto</h1>
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <tbody>
+                        {% for key, value in documentos.items %}
+                            <tr>
+                                <th>{{ key }}</th>
+                                <td>{{ value }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit">Vender</button>
+                </form>
+                
+            </div>
+        </div>
     </div>
 
 </body>

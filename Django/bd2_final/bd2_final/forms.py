@@ -1,6 +1,6 @@
 from django import forms
 from django.db import connections
-
+from django.core.validators import MaxValueValidator
 
 class mao_de_obra(forms.Form):
     nome_mo = forms.CharField(label='Nome da mão de obra', max_length=100)
@@ -32,6 +32,9 @@ class Armazens(forms.Form):
     nome_arm = forms.CharField(label='Nome do armazem', max_length=100)
     setor = forms.CharField(label='Setor do armazem', max_length=100)
     notas = forms.CharField(label='Notas', max_length=100)
+
+class item_fatura(forms.Form):
+    preco = forms.CharField(label='Custo de cada componente', max_length=100)
 
 class Ficha_Producao(forms.Form):
     custo_producao = forms.CharField(label='Custo da producao', max_length=100)
@@ -79,30 +82,20 @@ class Guia_Remessa(forms.Form):
 
 class Componentes_Producao(forms.Form):
     with connections['default'].cursor() as cursor:
-            cursor.execute("SELECT * FROM exibir_componentes();")
+            cursor.execute("SELECT * FROM componentes_em_stock();")
             componentes = cursor.fetchall()
         
-    componentes_choices = [(componente[0], componente[1]) for componente in componentes]
+    componentes_choices = [(componente[0], componente[2]) for componente in componentes]
+
     componente = forms.ChoiceField(choices=componentes_choices, label='Componentes')
     quantidade_usada = forms.IntegerField(label='Quantidade do componente usado')
 
 
 class Login(forms.Form):
-    username = forms.CharField(label='Nome do utilizador', max_length=100)
+    email = forms.CharField(label='email', max_length=100)
     password = forms.CharField(label='Palavra-Passe', max_length=100)
 
 class EquipamentosExportados(forms.Form):
-    with connections['default'].cursor() as cursor:
-            cursor.execute("SELECT * FROM exibir_equipamentos_armazenados();")
-            eq_arms = cursor.fetchall()
-    eq_arms_choices = [(eq_arm[0], eq_arm[4]) for eq_arm in eq_arms]     
-    pgsid_eq_arm = forms.ChoiceField(choices=eq_arms_choices,label='ID do equipamento')
     nome_equipamento = forms.CharField(label='Nome do equipamento', max_length=100)
-    atributoum = forms.CharField(label='Novo Atributo', max_length=100)
+    atributo = forms.CharField(label='Novo Atributo', max_length=100)
     valorum = forms.CharField(label='Valor', max_length=100)
-    atributodois = forms.CharField(label='Novo Atributo', max_length=100)
-    valordois = forms.CharField(label='Valor', max_length=100)
-    atributotres = forms.CharField(label='Novo Atributo', max_length=100)
-    valortres = forms.CharField(label='Valor', max_length=100)
-    atributoquatro = forms.CharField(label='Novo Atributo', max_length=100)
-    valorquatro = forms.CharField(label='Valor', max_length=100)

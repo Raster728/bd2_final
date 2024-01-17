@@ -48,36 +48,36 @@
             background-color: #e6e6e6;
         }
     </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
 <body>
     {% include 'sidebar.html' %}
+
     <div class="content">
-        <h1>{{ tipo }}</h1>
-        <table>
-            <thead>
-                <tr>
-                    {% for col in columns %}
-                    <th>{{ col }}</th>
-                    {% endfor %}
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in vista %}
-                <tr>
-                    <!-- Loop through the data rows -->
-                    {% for field in row %}
-                    <td>{{ field }}</td>
-                    {% endfor %}
-                    <td>
-                        <button><a href="/editar_{{tipo}}/{{row.0}}/{{guia}}/{{fatura}}">Criar guia de remessa</a></button>
-                    </td>
-                </tr>
+        <h1>Conteúdo da Coleção</h1>
+        
+        <div class="container">
+            <div class="row">
+                {% for documento in documentos %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            {% for key, value in documento.items %}
+                            <p class="card-text"><strong>{{ key }}:</strong> {{ value }}</p>
+                            {% endfor %}
+                            <a href="/vender_produto/{{documento.pgsid_eq_arm}}/{{cliente}}" class="btn btn-primary">Vender</a>
+                        </div>
+                    </div>
+                </div>
                 {% endfor %}
-            </tbody>
-        </table>
+            </div>
+        </div>
+        <a href="/carrinho/{{cliente}}" class="btn btn-primary">Carrinho</a>
+        <a href="/produtos" class="btn btn-primary">Sair do cliente</a>
     </div>
+
+</body>
 
 </body>
 

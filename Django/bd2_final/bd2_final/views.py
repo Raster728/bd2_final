@@ -614,6 +614,8 @@ def fatura_encomenda(request):
 
     return render(request, 'lista_sem_acoes.html', {'vista': fatura_encomenda, 'columns': columns, 'tipo': 'Faturas_das_encomendas', 'role': request.user_role})
 
+
+
 @has_permission('encomenda')
 def comp_stock(request):
     
@@ -817,6 +819,23 @@ def componentes_import_json(request):
             cursor.execute('call public.proc_importar_json(%s);', [json.dumps(dados)])
 
     return redirect('http://127.0.0.1:8000/componentes')
+
+@has_permission('encomenda')
+def inserir_componentes(request):
+
+    if request.method == "POST":
+        form = forms.Componentes(request.POST)
+        if form.is_valid():
+            nome_comp = form.cleaned_data['nome_comp']
+            desc_comp = form.cleaned_data['desc_comp']
+            cur = connections['default'].cursor()
+            cur.execute("call public.proc_inserir_componentes(%s, %s);", [nome_comp, desc_comp])
+            redirect_url = f'/componentes'
+            return HttpResponseRedirect(redirect_url)
+    else:
+        form = forms.Componentes()
+
+    return render(request, 'adicionar.html', {'form': form, 'role': request.user_role})
 
 
 #############################################################  LOGIN  ##########################################################################################

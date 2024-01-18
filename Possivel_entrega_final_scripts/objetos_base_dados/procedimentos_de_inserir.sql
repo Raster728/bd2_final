@@ -256,3 +256,15 @@ BEGIN
     
 END;
 $BODY$;
+
+
+CREATE OR REPLACE PROCEDURE public.proc_inserir_componentes(
+	IN componente text,
+	IN descricao text)
+LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+    INSERT INTO componentes (nome_comp, desc_comp)
+    VALUES (componente, descricao);
+END;
+$BODY$;

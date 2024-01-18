@@ -35,7 +35,14 @@ urlpatterns = [
 
     path('armazens', views.armazens, name="vista_armazens"),
     path('clientes', views.clientes, name="vista_clientes"),
+
+
     path('componentes', views.componentes, name="vista_componentes"),
+    path('adicionar_componente', views.inserir_componentes, name="inserir_componentes"),
+    
+
+
+
     path('encomendas', views.encomendas, name="vista_encomendas"),
     path('equipamentos', views.equipamentos, name="vista_equipamentos"),
     path('equipamentos_armazenados', views.equipamentos_armazenados, name="vista_equipamentos_armazenados"),

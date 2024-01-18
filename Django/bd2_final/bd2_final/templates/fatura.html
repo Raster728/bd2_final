@@ -54,7 +54,10 @@
 <body>
     {% include 'sidebar.html' %}
     <div class="content">
-        <button><a href="/fatura_encomenda/{{guia}}/{{encomenda}}/{{fatura}}">Preco por item</a></button>
+        Tem a certeza que quer criar a fatura
+        <button><a href="/fatura_encomenda/{{guia}}/{{encomenda}}/{{fatura}}">Criar fatura</a></button>
+        <button><a href="/editar_Guias/{{encomenda}}/{{guia}}">Voltar</a></button>
+        
     </div>
 
 </body>

@@ -1,6 +1,7 @@
 from django import forms
 from django.db import connections
 from django.core.validators import MaxValueValidator
+from datetime import datetime, timezone
 
 class mao_de_obra(forms.Form):
     nome_mo = forms.CharField(label='Nome da mão de obra', max_length=100)
@@ -51,8 +52,8 @@ class Mao_Obra_Usada(forms.Form):
     mos_choices = [(mo[0], mo[1]) for mo in mos]
     
     id_mao_obra = forms.ChoiceField(choices=mos_choices, label='Mão de obra utilizada')
-    hora_inicio = forms.DateField(label='Data da Encomenda', widget=forms.TextInput(attrs={'type': 'date'}))
-    hora_fim = forms.DateField(label='Data da Encomenda', widget=forms.TextInput(attrs={'type': 'date'}))
+    hora_inicio = forms.DateField(label='Hora de comeco da mao de obra',  widget=forms.TextInput(attrs={'type': 'date'}))
+    hora_fim = forms.DateField(label='Hora de fim da mao de obra',  widget=forms.TextInput(attrs={'type': 'date'}))
 
 class Encomendas(forms.Form):
     with connections['default'].cursor() as cursor:
@@ -63,7 +64,18 @@ class Encomendas(forms.Form):
 
     id_forn = forms.ChoiceField(choices=fornecedores_choices, label='Fornecedor')
     notas_enc = forms.CharField(label='Notas da encomenda', max_length=100)
-    data_enc = forms.DateField(label='Data da Encomenda', widget=forms.TextInput(attrs={'type': 'date'}))
+    data_enc = forms.DateTimeField(label='Data da Encomenda', widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
+    def clean_data_enc(self):
+        data_enc = self.cleaned_data['data_enc']
+
+
+        # Convert to UTC to store in the database without timezone info
+        data_enc_utc = data_enc.astimezone(timezone.utc)
+
+        # Remove timezone information
+        data_enc_utc = data_enc_utc.replace(tzinfo=None)
+
+        return data_enc_utc
 
 class Itens_Encomendas(forms.Form):
     with connections['default'].cursor() as cursor:

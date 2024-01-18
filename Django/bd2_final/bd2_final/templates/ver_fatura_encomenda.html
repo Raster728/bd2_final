@@ -75,22 +75,22 @@
     {% include 'sidebar.html' %}
 
     <div class="content">
-        <p><h1>Fatura da encomenda do cliente {{vista.0.1}}</h1></p>
+        <p><h1>Fatura da encomenda do fornecedor {{vista.0.4}}</h1></p>
         
         <div class="container">
-            <p><h3>Preço total da fatura: {{vista.0.2}}</h3></p>
-            <p><h3>Data e hora da fatura: {{vista.0.3}}</h3></p>
-
+            <p><h3>Preço total da fatura: {{vista.0.3}}</h3></p>
             <div class="row">
+                
                 {% for row in vista %}
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="card-title">
-                                <strong style="display: block; text-align: center;"><h3>{{row.4}}</h3></strong>
+                                <strong style="display: block; text-align: center;"><h3>{{row.2}}</h3></strong>
                             </div>
                             <div class="card-text">
-                                <p class="card-text">Preço do equipamento: {{row.5}}</p>
+                                <p class="card-text">Preço do item: {{row.1}}</p>
+                                <p class="card-text">Quantidade: {{row.5}}</p>
                             </div>
                         </div>
                     </div>

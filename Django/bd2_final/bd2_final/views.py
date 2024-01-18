@@ -8,7 +8,7 @@ from . import forms
 import pymongo
 from .utils import authenticate_user, has_permission
 from .models import CustomUser
-from datetime import date
+from datetime import datetime
 from django.contrib.auth import logout
 from django.contrib import messages
 import json
@@ -102,7 +102,7 @@ def adicionar_clientes(request):
             nome_cliente = form.cleaned_data['nome_cliente']
             nif = form.cleaned_data['nif']
             cur = connections['default'].cursor()
-            cur.execute("call public.proc_inserir_cliente(%s);", [nome_cliente])
+            cur.execute("call public.proc_inserir_cliente(%s, %s);", [nome_cliente, nif])
             return redirect('http://127.0.0.1:8000/clientes')  
     else:
         form = forms.Clientes()
@@ -200,6 +200,22 @@ def vender_produto(request, eq_id, cliente_id):
     return render(request, 'ver_produto.html', context)
 
 @has_permission('vendedor')
+def retirar_do_carrinho(request, eq_id, cliente_id):
+
+    context = {'role': request.user_role}
+    if request.method == "POST":
+        db = conexaomongo
+        col = db["carrinho"]
+
+        carrinho_existente = col.find_one({"pgsid_cliente": cliente_id})
+        if carrinho_existente:
+            col.update_one({"pgsid_cliente": cliente_id}, {'$pull': {'pgsid_eq_arm': eq_id}})
+            redirect_url = f'/carrinho/{cliente_id}'
+            return HttpResponseRedirect(redirect_url) 
+        
+    return render(request, 'produto_eliminar_confirm.html', context)
+
+@has_permission('vendedor')
 def ver_produto(request, eq_id):
 
     db = conexaomongo
@@ -253,9 +269,10 @@ def carrinho(request, cliente_id):
                 equipamento = col1.find_one({"pgsid_eq_arm": id_equipamento})
                 nome_equipamento = equipamento["nome_equipamento"]
                 preco = equipamento["Preço"]
-                nomes_equipamentos.append({'nome': nome_equipamento, 'preco': preco})
+                id = equipamento["pgsid_eq_arm"]
+                nomes_equipamentos.append({'nome': nome_equipamento, 'preco': preco, 'id': id})
 
-    context = {'documentos': carrinho, 'equipamentos': equipamentos, 'nomes_equipamentos': nomes_equipamentos, 'cliente': cliente_id, 'role': request.user_role}
+    context = {'documentos': carrinho, 'equipamentos': equipamentos, 'nomes_equipamentos': nomes_equipamentos,  'cliente': cliente_id, 'role': request.user_role}
     
     return render(request, 'carrinho.html', context)
 
@@ -309,7 +326,7 @@ def armazens(request):
 
 @has_permission('armazem')
 def escolher_enc_para_guia(request):
-    current_datetime = date.today()
+    current_datetime = datetime.today()
     with connections['default'].cursor() as cursor:
 
         cursor.execute("SELECT * FROM exibir_encomenda();")
@@ -598,7 +615,7 @@ def comp_stock_prod(request):
         columns = [col[0] for col in cursor.description]
         comp_stock = cursor.fetchall()
 
-    return render(request, 'lista.html', {'vista': comp_stock, 'columns': columns, 'tipo': 'comp_stock', 'role': request.user_role})
+    return render(request, 'lista_sem_acoes.html', {'vista': comp_stock, 'columns': columns, 'tipo': 'comp_stock', 'role': request.user_role})
 
 
 #############################################################  ENCOMENDA  ##########################################################################################
@@ -612,7 +629,18 @@ def fatura_encomenda(request):
         columns = [col[0] for col in cursor.description]
         fatura_encomenda = cursor.fetchall()
 
-    return render(request, 'lista_sem_acoes.html', {'vista': fatura_encomenda, 'columns': columns, 'tipo': 'Faturas_das_encomendas', 'role': request.user_role})
+    return render(request, 'lista_faturas.html', {'vista': fatura_encomenda, 'columns': columns, 'tipo': 'Faturas_das_encomendas', 'role': request.user_role})
+
+@has_permission('encomenda')
+def ver_fatura_encomenda(request, fatura_id):
+    
+    with connections['default'].cursor() as cursor:
+
+        cursor.execute("SELECT * FROM func_fatura_id(%s);", [fatura_id])
+        columns = [col[0] for col in cursor.description]
+        fatura_encomenda = cursor.fetchall()
+
+    return render(request, 'ver_fatura_encomenda.html', {'vista': fatura_encomenda, 'columns': columns, 'tipo': 'Faturas_das_encomendas', 'role': request.user_role})
 
 
 
@@ -625,7 +653,7 @@ def comp_stock(request):
         columns = [col[0] for col in cursor.description]
         comp_stock = cursor.fetchall()
 
-    return render(request, 'lista.html', {'vista': comp_stock, 'columns': columns, 'tipo': 'comp_stock', 'role': request.user_role})
+    return render(request, 'lista_sem_acoes.html', {'vista': comp_stock, 'columns': columns, 'tipo': 'comp_stock', 'role': request.user_role})
 
 @has_permission('encomenda')
 def encomendas(request):

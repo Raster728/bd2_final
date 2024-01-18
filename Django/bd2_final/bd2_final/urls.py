@@ -51,10 +51,12 @@ urlpatterns = [
     path('fatura_and_items', views.fatura_and_items, name="vista_fatura_and_items"),
     path('fatura_encomenda', views.fatura_encomenda, name="vista_fatura_encomenda"),
     path('fatura_encomenda_armazem', views.fatura_encomenda_armazem, name="vista_fatura_encomenda_armazem"),
+    path('ver_fatura_Faturas_das_encomendas/<int:fatura_id>', views.ver_fatura_encomenda, name="ver_fatura_Faturas_das_encomendas"),
+    
 
 
     path('fatura_venda', views.fatura_venda, name="vista_fatura_venda"),
-    path('ver_fatura/<int:fatura_id>', views.fatura_venda_ver, name="ver_fatura"),
+    path('ver_fatura_fatura_venda/<int:fatura_id>', views.fatura_venda_ver, name="ver_fatura_fatura_venda"),
     
     
     
@@ -127,6 +129,8 @@ urlpatterns = [
 
     path('carrinho/<int:cliente_id>', views.carrinho, name='carrinho'),
     path('concluir_compra/<int:cliente_id>', views.concluir_compra, name='concluir_compra'),
+    path('confirmar_remover/<int:cliente_id>/<int:eq_id>', views.retirar_do_carrinho, name='confirmar_remover'),
+    
     
 
 ]

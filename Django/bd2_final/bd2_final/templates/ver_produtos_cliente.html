@@ -23,29 +23,21 @@
             /* Outros estilos para o conteúdo principal */
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-family: Arial, sans-serif;
+        /* Button styles */
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #ED7D31;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
         }
 
-        th,
-        td {
-            border: 1px solid #dddddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #e6e6e6;
+        button a {
+            color: #fff;
+            text-decoration: none;
         }
     </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -55,7 +47,7 @@
     {% include 'sidebar.html' %}
 
     <div class="content">
-        <h1>Conteúdo da Coleção</h1>
+        <h1>Equipamentos para venda</h1>
         
         <div class="container">
             <div class="row">
@@ -66,15 +58,15 @@
                             {% for key, value in documento.items %}
                             <p class="card-text"><strong>{{ key }}:</strong> {{ value }}</p>
                             {% endfor %}
-                            <a href="/vender_produto/{{documento.pgsid_eq_arm}}/{{cliente}}" class="btn btn-primary">Vender</a>
+                            <button ><a href="/vender_produto/{{documento.pgsid_eq_arm}}/{{cliente}}">Vender</a></button>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
-        <a href="/carrinho/{{cliente}}" class="btn btn-primary">Carrinho</a>
-        <a href="/produtos" class="btn btn-primary">Sair do cliente</a>
+        <button ><a href="/carrinho/{{cliente}}">Carrinho</a></button>
+        <button ><a href="/produtos">Sair do cliente</a></button>
     </div>
 
 </body>

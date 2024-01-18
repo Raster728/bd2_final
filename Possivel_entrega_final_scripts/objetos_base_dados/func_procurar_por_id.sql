@@ -33,9 +33,9 @@ BEGIN
 END;
 $BODY$;
 
-CREATE OR REPLACE FUNCTION public.func_cliente_nome(
-	nome text)
-    RETURNS TABLE(id_cliente integer, nome_cliente text) 
+CREATE OR REPLACE FUNCTION public.func_cliente_nif(
+	n text)
+    RETURNS TABLE(id_cliente integer, nome_cliente text, nif text) 
     LANGUAGE 'plpgsql'
     COST 100
     VOLATILE PARALLEL UNSAFE
@@ -44,9 +44,9 @@ CREATE OR REPLACE FUNCTION public.func_cliente_nome(
 AS $BODY$
 BEGIN
     RETURN QUERY
-    SELECT vc.id_cliente, vc.nome_cliente
+    SELECT vc.id_cliente, vc.nome_cliente, vc.nif
     FROM public.view_clients vc
-    WHERE vc.nome_cliente = nome;
+    WHERE vc.nif = n;
 END;
 $BODY$;
 

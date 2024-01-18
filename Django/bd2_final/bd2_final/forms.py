@@ -26,7 +26,7 @@ class Componentes(forms.Form):
     desc_comp = forms.CharField(label='Descrição do componente', max_length=100)
 
 class Clientes(forms.Form):
-    nome_cliente = forms.CharField(label='Nome do cliente', max_length=100)
+    nif = forms.CharField(label='NIF', max_length=100)
 
 class Armazens(forms.Form):
     nome_arm = forms.CharField(label='Nome do armazem', max_length=100)
@@ -89,6 +89,16 @@ class Componentes_Producao(forms.Form):
 
     componente = forms.ChoiceField(choices=componentes_choices, label='Componentes')
     quantidade_usada = forms.IntegerField(label='Quantidade do componente usado')
+
+
+class Equipamentos_armazenados(forms.Form):
+    with connections['default'].cursor() as cursor:
+            cursor.execute("SELECT * FROM exibir_armazem();")
+            armazens = cursor.fetchall()
+        
+    armazens_choices = [(armazem[0], armazem[1]) for armazem in armazens]
+
+    armazem = forms.ChoiceField(choices=armazens_choices, label='Armazens')
 
 
 class Login(forms.Form):

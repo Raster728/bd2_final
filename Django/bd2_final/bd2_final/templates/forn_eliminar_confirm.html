@@ -3,8 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
+    <title>COMPNET</title>
+
     <style>
-        body {
+       body {
             font-family: 'Arial', sans-serif;
             background-color: #f5f5f5;
             margin: 0;
@@ -31,16 +33,18 @@
             color: #333;
         }
     </style>
+
+
 </head>
 
 <body>
+
     {% include 'sidebar.html' %}
     <div id="content">
         <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
-
-            <button type="submit">Guardar</button>
+            Tem a certeza que quer eliminar o fornecedor?
+            <button>Continuar</button>
         </form>
     </div>
 </body>

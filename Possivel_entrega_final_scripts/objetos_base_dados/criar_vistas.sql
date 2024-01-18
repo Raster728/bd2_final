@@ -9,7 +9,8 @@ CREATE OR REPLACE VIEW public.view_armazem
 CREATE OR REPLACE VIEW public.view_clients
  AS
  SELECT clientes.id_cliente,
-    clientes.nome_cliente
+    clientes.nome_cliente,
+	clientes.nif
    FROM clientes;
    
 CREATE OR REPLACE VIEW public.view_componentes
@@ -86,11 +87,12 @@ CREATE OR REPLACE VIEW public.view_equipamentos_armazenados
     a.setor,
     fp.id_ficha_prod,
     e.nome_equipamento,
-    ea.id_quant_eq_arm
+    fp.custo_producao
    FROM equipamnetos_arm ea
      LEFT JOIN armazem a ON a.id_armazem = ea.id_armazem
      LEFT JOIN ficha_producao fp ON ea.id_ficha_prod = fp.id_ficha_prod
-     LEFT JOIN equipamentos e ON fp.id_equipamento = e.id_equipamento;
+     LEFT JOIN equipamentos e ON fp.id_equipamento = e.id_equipamento
+	 WHERE ea.id_eq_arm NOT IN (SELECT id_eq_arm FROM itens_fatura_venda);
 	 
 CREATE OR REPLACE VIEW public.view_fatura_and_items
  AS
@@ -230,3 +232,8 @@ CREATE OR REPLACE VIEW public.view_itens_com_id
    FROM view_encomenda ve
      RIGHT JOIN item_enc ie ON ve.id_enc = ie.id_enc
      LEFT JOIN componentes c ON c.id_componente = ie.id_componente;
+	 
+CREATE OR REPLACE VIEW public.view_fp
+ AS
+ SELECT fp.id_ficha_prod, nome_equipamento, tipo, custo_producao FROM ficha_producao fp
+ LEFT JOIN equipamentos e ON fp.id_equipamento = e.id_equipamento

@@ -60,7 +60,9 @@
                     {% for col in columns %}
                     <th>{{ col }}</th>
                     {% endfor %}
+                    {% if role == 'armazem' %}
                     <th>Ações</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -70,10 +72,11 @@
                     {% for field in row %}
                     <td>{{ field }}</td>
                     {% endfor %}
+                    {% if role == 'armazem' %}
                     <td>
-                        <button><a href="/editar_{{tipo}}/{{row.0}}">Editar</a></button>
-                        <button><a href="/eliminar_{{tipo}}/{{row.0}}">Eliminar</a></button>
+                        <button><a href="fichas_producao/{{row.0}}">Armazenar Equipamento</a></button>
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>

@@ -46,8 +46,16 @@ urlpatterns = [
     path('itens_encomenda', views.itens_encomenda, name="vista_itens_encomenda"),
     path('itens_remessa', views.itens_remessa, name="vista_itens_remessa"),
     path('mao_obra', views.mao_obra, name="vista_mao_obra"),
-    path('comp_stock', views.comp_stock, name="comp_stock"),
 
+
+    path('comp_stock', views.comp_stock, name="comp_stock"),
+    path('comp_stock_prod', views.comp_stock_prod, name="comp_stock_prod"),
+    
+
+
+    path('fichas_producao', views.ficha_prod, name="fichas_producao"),
+    path('ficha_prod_producao', views.ficha_prod_producao, name="ficha_prod_producao"),
+    path('fichas_producao/<int:id_fp>', views.armazenar_eq, name="fichas_producao_armazenar"),
     
 
     #############################################################  UPDATE  ##########################################################################################
@@ -57,7 +65,12 @@ urlpatterns = [
     path('editar_Clientes/<int:clientes_id>/', views.editar_clientes, name='editar_Clientes'),
     path('editar_Armazens/<int:armazens_id>/', views.editar_armazens, name='editar_Armazens'),
     path('editar_Faturas_das_encomendas/<int:fatura_encomenda_id>/', views.editar_Fatura_encomenda, name='editar_Fatura_encomenda'),
+
+
     path('editar_Fornecedores/<int:fornecedores_id>/', views.editar_Fornecedores, name='editar_Fornecedores'),
+    path('eliminar_Fornecedores/<int:fornecedores_id>/', views.eliminar_fornecedores, name='eliminar_Fornecedores'),
+    path('adicionar_Fornecedores', views.adicionar_fornecedores, name='adicionar_Fornecedores'),
+
     path('editar_Mao_de_obra/<int:mao_obra_id>/', views.editar_Mao_de_obra, name='editar_Mao_de_obra'),
 
     #############################################################  CREATE  ##########################################################################################

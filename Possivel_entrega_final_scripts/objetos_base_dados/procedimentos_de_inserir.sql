@@ -117,7 +117,6 @@ $BODY$;
 
 CREATE OR REPLACE PROCEDURE public.proc_inserir_ficha_producao(
 	IN equipamento integer,
-	IN custo text,
 	OUT id integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
@@ -125,7 +124,7 @@ DECLARE
     ficha_id INT;
 BEGIN
     INSERT INTO ficha_producao (id_equipamento, custo_producao)
-    VALUES (equipamento, custo::money) RETURNING id_ficha_prod INTO ficha_id;
+    VALUES (equipamento, 0) RETURNING id_ficha_prod INTO ficha_id;
     id := ficha_id;
 END;
 $BODY$;
@@ -138,7 +137,7 @@ CREATE OR REPLACE PROCEDURE public.proc_inserir_fornecedor(
 LANGUAGE 'plpgsql'
 AS $BODY$
 BEGIN
-    INSERT INTO clientes (nome_forn)
+    INSERT INTO fornecedores (nome_forn)
     VALUES (nome);
     
 END;
@@ -243,3 +242,16 @@ BEGIN
 END;
 $BODY$;
 
+
+
+CREATE OR REPLACE PROCEDURE public.proc_inserir_equipamento_armazenado(
+	IN armazem integer,
+	IN ficha_prod integer)
+LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+    INSERT INTO equipamnetos_arm (id_armazem, id_ficha_prod)
+    VALUES (armazem, ficha_prod);
+    
+END;
+$BODY$;

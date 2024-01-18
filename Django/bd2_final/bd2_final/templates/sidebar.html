@@ -48,8 +48,9 @@
         <ul>
             {% if role == 'producao' %}
             <li><a href="/equipamentos">Lista de equipamentos</a></li>
-            <li><a href="/componentes">Lista de componentes</a></li>
-            <li><a href="/comp_stock">Lista de componentes em stock</a></li>
+            <li><a href="/comp_stock_prod">Lista de componentes em stock</a></li>
+            
+            <li><a href="/ficha_prod_producao">Lista de fichas de producao</a></li>
             {% endif %}
 
             
@@ -64,11 +65,15 @@
             <li><a href="/armazens">Lista de armazens</a></li>
             <li><a href="/guia_remessa">Lista de guias de remessa</a></li>
             <li><a href="/fatura_encomenda">Lista de faturas das encomendas</a></li>
+            <li><a href="/fichas_producao">Lista de fichas de producao</a></li>
             
             {% endif %}
 
             {% if role == 'encomenda' %}
             <li><a href="/encomendas">Lista de encomendas</a></li>
+            <li><a href="/fornecedores">Lista de fornecedores</a></li>
+            <li><a href="/comp_stock">Lista de componentes em stock</a></li>
+            <li><a href="/componentes">Lista de componentes</a></li>
             {% endif %}
 
             

@@ -90,7 +90,7 @@ $BODY$;
 
 CREATE OR REPLACE FUNCTION public.exibir_equipamentos_armazenados(
 	)
-    RETURNS TABLE(id_eq_arm integer, nome_arm text, setor text, id_ficha_prod integer, nome_equipamento text, id_quant_eq_arm integer) 
+    RETURNS TABLE(id_eq_arm integer, nome_arm text, setor text, id_ficha_prod integer, nome_equipamento text, custo_producao money) 
     LANGUAGE 'plpgsql'
     COST 100
     VOLATILE PARALLEL UNSAFE
@@ -301,3 +301,18 @@ BEGIN
 END;
 $BODY$;
 
+
+
+CREATE OR REPLACE FUNCTION public.exibir_fp(
+	)
+    RETURNS TABLE(id_ficha_prod integer, nome_equipamento text, tipo text, custo_producao money) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+begin
+	return query select * from view_fp;
+end;
+$BODY$;

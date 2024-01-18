@@ -178,9 +178,9 @@ def escolher_cliente(request):
     if request.method == "POST":
         form = forms.Clientes(request.POST)
         if form.is_valid():
-            nome_cliente = form.cleaned_data['nome_cliente']
+            nif = form.cleaned_data['nif']
             cur = connections['default'].cursor()
-            cur.execute("SELECT * FROM func_cliente_nome(%s);", [nome_cliente])
+            cur.execute("SELECT * FROM func_cliente_nif(%s);", [nif])
             result = cur.fetchone()
             
             if result:
@@ -412,7 +412,44 @@ def editar_armazens(request, armazens_id):
         form = forms.Armazens(initial=form_initial_data)
     
     return render(request, 'editar_registro.html', {'form': form, 'role': request.user_role})
+
+
+@has_permission('armazem')
+def ficha_prod(request):
+    with connections['default'].cursor() as cursor:
+
+        cursor.execute("SELECT * FROM exibir_fp();")
+        columns = [col[0] for col in cursor.description]
+        fp = cursor.fetchall()
+    return render(request, 'fichas_producao.html', {'vista': fp, 'columns': columns, 'tipo': 'Ficha_Producao', 'role': request.user_role})
+
+
+@has_permission('armazem')
+def armazenar_eq(request, id_fp):
+
+    if request.method == 'POST':
+        form = forms.Equipamentos_armazenados(request.POST)
+        if form.is_valid():
+            armazem = form.cleaned_data["armazem"]
+            cur = connections['default'].cursor()
+            cur.execute("CALL public.proc_inserir_equipamento_armazenado(%s, %s);", [armazem, id_fp])
+            return redirect('http://127.0.0.1:8000/fichas_producao')  
+    else:
+        form = forms.Equipamentos_armazenados()
+    
+    return render(request, 'adicionar.html', {'form': form, 'role': request.user_role})
+
 #############################################################  PRODUCAO  ##########################################################################################
+
+@has_permission('producao')
+def ficha_prod_producao(request):
+    with connections['default'].cursor() as cursor:
+
+        cursor.execute("SELECT * FROM exibir_fp();")
+        columns = [col[0] for col in cursor.description]
+        fp = cursor.fetchall()
+    return render(request, 'fichas_producao.html', {'vista': fp, 'columns': columns, 'tipo': 'Ficha_Producao', 'role': request.user_role})
+
 
 @has_permission('producao')
 def criar_equipamentos(request):
@@ -432,18 +469,13 @@ def criar_equipamentos(request):
 @has_permission('producao')
 def criar_Ficha_Producao(request, equipamento_id):
     if request.method == "POST":
-        form = forms.Ficha_Producao(request.POST)
-        if form.is_valid():
-            custo_producao = form.cleaned_data['custo_producao']
-            cur = connections['default'].cursor()
-            cur.execute("call public.proc_inserir_ficha_producao(%s, %s, NULL);", [equipamento_id, custo_producao])
-            id_output = cur.fetchone()[0]
-            redirect_url = f'/criar_Ficha_Item/{id_output}/'
-            return HttpResponseRedirect(redirect_url)  
-    else:
-        form = forms.Ficha_Producao()
+        cur = connections['default'].cursor()
+        cur.execute("call public.proc_inserir_ficha_producao(%s, NULL);", [equipamento_id])
+        id_output = cur.fetchone()[0]
+        redirect_url = f'/criar_Ficha_Item/{id_output}/'
+        return HttpResponseRedirect(redirect_url)  
 
-    return render(request, 'adicionar.html', {'form': form, 'role': request.user_role})
+    return render(request, 'ficha_prod_confirmar.html', {'role': request.user_role})
 
 @has_permission('producao')
 def itens_ficha_prod(request, ficha_prod_id):
@@ -499,53 +531,7 @@ def equipamentos(request):
 
     return render(request, 'equipamentos.html', {'vista': equipamentos, 'columns': columns, 'tipo': 'Equipamentos', 'role': request.user_role})
 
-@has_permission('producao')
-def componentes(request):
-    with connections['default'].cursor() as cursor:
-        cursor.execute("SELECT * FROM exibir_componentes();")
-        columns = [col[0] for col in cursor.description]
-        componentes = cursor.fetchall()
 
-    return render(request, 'componentes.html', {'vista': componentes, 'columns': columns, 'tipo': 'Componentes', 'role': request.user_role})
-
-
-@has_permission('producao')
-def componentes_import_json(request):
-    if request.method == 'POST':
-        arquivo_json = request.FILES.get('arquivo') 
-        dados = json.loads(arquivo_json.read())
-        # Faça algo com os dados (por exemplo, salve-os no banco de dados)
-        with connections['default'].cursor() as cursor:
-            cursor.execute('call public.proc_importar_json(%s);', [json.dumps(dados)])
-
-    return redirect('http://127.0.0.1:8000/componentes')
-
-@has_permission('producao')
-def editar_equipamentos(request, equipamentos_id):
-
-    with connections['default'].cursor() as cursor:
-        query = "SELECT * FROM func_equipamento_nome(%s);"
-        cursor.execute(query, [equipamentos_id])
-        columns = [col[0] for col in cursor.description]
-        equipamentos = cursor.fetchall()
-
-    if request.method == 'POST':
-        form = forms.Equipamentos(request.POST)
-        if form.is_valid():
-            nome_equ = form.cleaned_data["nome_equipamento"]
-            tipo = form.cleaned_data["tipo"]
-            cur = connections['default'].cursor()
-            cur.execute("SELECT public.editar_equipamentos(%s, %s, %s);", [equipamentos_id, nome_equ, tipo])
-            return redirect('http://127.0.0.1:8000/equipamentos')  
-    else:
-        form_initial_data = {}
-        if equipamentos:
-            equipamento = equipamentos[0]
-            for idx, column in enumerate(columns):
-                form_initial_data[column] = equipamento[idx]
-        form = forms.Equipamentos(initial=form_initial_data)
-    
-    return render(request, 'editar_registro.html', {'form': form, 'role': request.user_role})
 
 @has_permission('producao')
 def mao_obra(request):
@@ -558,16 +544,7 @@ def mao_obra(request):
 
     return render(request, 'lista.html', {'vista': mao_obra, 'columns': columns, 'tipo': 'Mao_de_obra', 'role': request.user_role})
 
-@has_permission('producao')
-def comp_stock(request):
-    
-    with connections['default'].cursor() as cursor:
 
-        cursor.execute("SELECT * FROM componentes_em_stock();")
-        columns = [col[0] for col in cursor.description]
-        comp_stock = cursor.fetchall()
-
-    return render(request, 'lista.html', {'vista': comp_stock, 'columns': columns, 'tipo': 'comp_stock', 'role': request.user_role})
 
 @has_permission('producao')
 def editar_componentes(request, componentes_id):
@@ -622,8 +599,30 @@ def editar_Mao_de_obra(request, mao_obra_id):
     
     return render(request, 'editar_registro.html', {'form': form, 'role': request.user_role})
 
+@has_permission('producao')
+def comp_stock_prod(request):
+    
+    with connections['default'].cursor() as cursor:
+
+        cursor.execute("SELECT * FROM componentes_em_stock();")
+        columns = [col[0] for col in cursor.description]
+        comp_stock = cursor.fetchall()
+
+    return render(request, 'lista.html', {'vista': comp_stock, 'columns': columns, 'tipo': 'comp_stock', 'role': request.user_role})
+
 
 #############################################################  ENCOMENDA  ##########################################################################################
+
+@has_permission('encomenda')
+def comp_stock(request):
+    
+    with connections['default'].cursor() as cursor:
+
+        cursor.execute("SELECT * FROM componentes_em_stock();")
+        columns = [col[0] for col in cursor.description]
+        comp_stock = cursor.fetchall()
+
+    return render(request, 'lista.html', {'vista': comp_stock, 'columns': columns, 'tipo': 'comp_stock', 'role': request.user_role})
 
 @has_permission('encomenda')
 def encomendas(request):
@@ -719,6 +718,30 @@ def fornecedores(request):
 
     return render(request, 'lista.html', {'vista': fornecedores, 'columns': columns, 'tipo': 'Fornecedores', 'role': request.user_role})
 
+
+@has_permission('encomenda')
+def eliminar_fornecedores(request, fornecedores_id):
+    
+    if request.method == "POST":
+        cur = connections['default'].cursor()
+        cur.execute("call public.proc_eliminar_fornecedores(%s);", [fornecedores_id])
+        return redirect('http://127.0.0.1:8000/fornecedores')  
+    return render(request, 'forn_eliminar_confirm.html', {'tipo': 'Fornecedores', 'role': request.user_role})
+
+@has_permission('encomenda')
+def adicionar_fornecedores(request):
+    
+    if request.method == "POST":
+        form = forms.fornecedores(request.POST)
+        if form.is_valid():
+            nome_forn = form.cleaned_data['nome_forn']
+            cur = connections['default'].cursor()
+            cur.execute("call public.proc_inserir_fornecedor(%s);", [nome_forn])
+            return redirect('http://127.0.0.1:8000/fornecedores')  
+    else:
+        form = forms.fornecedores()
+    return render(request, 'adicionar.html', {'form': form, 'tipo': 'Fornecedores', 'role': request.user_role})
+
 @has_permission('encomenda')
 def editar_Fatura_encomenda(request, fatura_encomenda_id):
 
@@ -766,6 +789,55 @@ def editar_Fornecedores(request, fornecedores_id):
             for idx, column in enumerate(columns):
                 form_initial_data[column] = fornecedor[idx]
         form = forms.fornecedores(initial=form_initial_data)
+    
+    return render(request, 'editar_registro.html', {'form': form, 'role': request.user_role})
+
+
+@has_permission('encomenda')
+def componentes(request):
+    with connections['default'].cursor() as cursor:
+        cursor.execute("SELECT * FROM exibir_componentes();")
+        columns = [col[0] for col in cursor.description]
+        componentes = cursor.fetchall()
+
+    return render(request, 'componentes.html', {'vista': componentes, 'columns': columns, 'tipo': 'Componentes', 'role': request.user_role})
+
+
+@has_permission('encomenda')
+def componentes_import_json(request):
+    if request.method == 'POST':
+        arquivo_json = request.FILES.get('arquivo') 
+        dados = json.loads(arquivo_json.read())
+        # Faça algo com os dados (por exemplo, salve-os no banco de dados)
+        with connections['default'].cursor() as cursor:
+            cursor.execute('call public.proc_importar_json(%s);', [json.dumps(dados)])
+
+    return redirect('http://127.0.0.1:8000/componentes')
+
+@has_permission('encomenda')
+def editar_equipamentos(request, equipamentos_id):
+
+    with connections['default'].cursor() as cursor:
+        query = "SELECT * FROM func_equipamento_nome(%s);"
+        cursor.execute(query, [equipamentos_id])
+        columns = [col[0] for col in cursor.description]
+        equipamentos = cursor.fetchall()
+
+    if request.method == 'POST':
+        form = forms.Equipamentos(request.POST)
+        if form.is_valid():
+            nome_equ = form.cleaned_data["nome_equipamento"]
+            tipo = form.cleaned_data["tipo"]
+            cur = connections['default'].cursor()
+            cur.execute("SELECT public.editar_equipamentos(%s, %s, %s);", [equipamentos_id, nome_equ, tipo])
+            return redirect('http://127.0.0.1:8000/equipamentos')  
+    else:
+        form_initial_data = {}
+        if equipamentos:
+            equipamento = equipamentos[0]
+            for idx, column in enumerate(columns):
+                form_initial_data[column] = equipamento[idx]
+        form = forms.Equipamentos(initial=form_initial_data)
     
     return render(request, 'editar_registro.html', {'form': form, 'role': request.user_role})
 

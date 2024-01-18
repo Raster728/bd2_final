@@ -137,8 +137,8 @@ $BODY$;
 
 
 CREATE OR REPLACE FUNCTION public.func_fatura_id(
-	id integer)
-    RETURNS TABLE(id_fatura_enc integer, preco_total_enc money) 
+    id integer)
+    RETURNS TABLE(id_fatura_enc integer, preco_item_fatura money, nome_comp text, preco_total_enc money, nome_forn text, quantidade_remessa integer) 
     LANGUAGE 'plpgsql'
     COST 100
     VOLATILE PARALLEL UNSAFE
@@ -147,8 +147,8 @@ CREATE OR REPLACE FUNCTION public.func_fatura_id(
 AS $BODY$
 BEGIN
     RETURN QUERY
-    SELECT vfe.id_fatura_enc, vfe.preco_total_enc
-    FROM public.view_fatura_encomenda vfe
+    SELECT *
+    FROM public.view_fatura_encomenda_itens vfe
     WHERE vfe.id_fatura_enc = id;
 END;
 $BODY$;
@@ -290,8 +290,9 @@ END;
 $BODY$;
 
 
-CREATE OR REPLACE FUNCTION public.exibir_fatura_venda( id integer)
-    RETURNS TABLE(id_fatura_venda integer, nome_cliente text, preco_total money, data_fatura timestamp without time zone, nome_equipamento text) 
+CREATE OR REPLACE FUNCTION public.exibir_fatura_venda(
+    id integer)
+    RETURNS TABLE(id_fatura_venda integer, nome_cliente text, preco_total money, data_fatura timestamp without time zone, nome_equipamento text, preco_venda money) 
     LANGUAGE 'plpgsql'
     COST 100
     VOLATILE PARALLEL UNSAFE
@@ -299,7 +300,7 @@ CREATE OR REPLACE FUNCTION public.exibir_fatura_venda( id integer)
 
 AS $BODY$
 begin
-	return query select * from view_fatura_venda
-	where view_fatura_venda.id_fatura_venda = id;
+    return query select * from view_fatura_venda
+    where view_fatura_venda.id_fatura_venda = id;
 end;
 $BODY$;

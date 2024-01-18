@@ -248,7 +248,8 @@ CREATE OR REPLACE VIEW public.view_fatura_venda
     c.nome_cliente,
     fv.preco_total,
     fv.data_fatura,
-    e.nome_equipamento
+    e.nome_equipamento,
+    ifv.preco_venda
    FROM fatura_venda fv
      LEFT JOIN clientes c ON fv.id_cliente = c.id_cliente
      LEFT JOIN itens_fatura_venda ifv ON fv.id_fatura_venda = ifv.id_fatura_venda
@@ -267,3 +268,20 @@ CREATE OR REPLACE VIEW public.view_faturas_venda
    FROM fatura_venda fv
      LEFT JOIN clientes c ON fv.id_cliente = c.id_cliente
      LEFT JOIN itens_fatura_venda ifv ON fv.id_fatura_venda = ifv.id_fatura_venda
+	 
+	 
+CREATE OR REPLACE VIEW public.view_fatura_encomenda_itens
+ AS
+ SELECT fe.id_fatura_enc,
+         ife.preco_item_fatura,
+        c.nome_comp,
+    fe.preco_total_enc,
+    f.nome_forn,
+    ir.quantidade_remessa
+   FROM fatura_encomenda fe 
+   LEFT JOIN item_fatura_enc ife ON fe.id_fatura_enc = ife.id_fatura_enc
+   LEFT JOIN itens_remessa ir ON ife.id_item_remessa = ir.id_item_remessa
+   LEFT JOIN item_enc ie ON ir.id_item_enc = ie.id_item_enc
+   LEFT JOIN componentes c ON ie.id_componente = c.id_componente
+   LEFT JOIN encomenda e ON ie.id_enc = e.id_enc
+   LEFT JOIN fornecedores f ON e.id_forn = f.id_forn;

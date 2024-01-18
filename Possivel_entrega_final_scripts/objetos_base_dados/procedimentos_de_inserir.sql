@@ -100,15 +100,15 @@ $BODY$;
 
 
 CREATE OR REPLACE PROCEDURE public.proc_inserir_fatura_venda(
-	IN cliente integer,
-	OUT id integer)
+    IN cliente integer,
+    OUT id integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
 DECLARE
     fatura_id INT;
 BEGIN
     INSERT INTO fatura_venda (id_cliente, preco_total, data_fatura)
-    VALUES (cliente, 0, CURRENT_DATE) RETURNING id_fatura_venda INTO fatura_id;
+    VALUES (cliente, 0, CURRENT_TIMESTAMP) RETURNING id_fatura_venda INTO fatura_id;
     id := fatura_id;
 END;
 $BODY$;

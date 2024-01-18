@@ -1,0 +1,36 @@
+[{
+  "_id": {
+    "$oid": "65909f71e72b19e7273f3764"
+  },
+  "username": "Rafael",
+  "password": "12345",
+  "role": "vendedor",
+  "email": "rafael@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "65909f71e72b19e7273f3774"
+  },
+  "username": "Eduardo",
+  "password": "12345",
+  "role": "armazem",
+  "email": "eduardo@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "65909f71e72b19e7276f3764"
+  },
+  "username": "Maria",
+  "password": "12345",
+  "role": "producao",
+  "email": "maria@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "65909f01e72b19e7273f3764"
+  },
+  "username": "Marco",
+  "password": "12345",
+  "role": "encomenda",
+  "email": "marco@gmail.com"
+}]

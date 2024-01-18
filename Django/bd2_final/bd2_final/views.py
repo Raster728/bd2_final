@@ -24,6 +24,28 @@ def index(request):
 #############################################################  VENDEDOR  ##########################################################################################
 
 @has_permission('vendedor')
+def fatura_venda(request):
+    
+    with connections['default'].cursor() as cursor:
+
+        cursor.execute("SELECT * FROM exibir_faturas_venda();")
+        columns = [col[0] for col in cursor.description]
+        fatura_venda = cursor.fetchall()
+
+    return render(request, 'lista_faturas.html', {'vista': fatura_venda, 'columns': columns, 'tipo': 'fatura_venda', 'role': request.user_role})
+
+@has_permission('vendedor')
+def fatura_venda_ver(request, fatura_id):
+    
+    with connections['default'].cursor() as cursor:
+
+        cursor.execute("SELECT * FROM exibir_fatura_venda(%s);", [fatura_id])
+        columns = [col[0] for col in cursor.description]
+        fatura_venda = cursor.fetchall()
+
+    return render(request, 'ver_fatura.html', {'vista': fatura_venda, 'columns': columns, 'tipo': 'fatura_venda', 'role': request.user_role})
+
+@has_permission('vendedor')
 def clientes(request):
     with connections['default'].cursor() as cursor:
 
@@ -57,8 +79,9 @@ def editar_clientes(request, clientes_id):
         form = forms.Clientes(request.POST)
         if form.is_valid():
             nome_cliente = form.cleaned_data["nome_cliente"]
+            nif = form.cleaned_data["nif"]
             cur = connections['default'].cursor()
-            cur.execute("SELECT public.editar_clients(%s, %s);", [clientes_id, nome_cliente])
+            cur.execute("CALL public.proc_editar_clients(%s, %s, %s);", [clientes_id, nome_cliente, nif])
             return redirect('http://127.0.0.1:8000/clientes')  
     else:
         form_initial_data = {}
@@ -77,12 +100,23 @@ def adicionar_clientes(request):
         form = forms.Clientes(request.POST)
         if form.is_valid():
             nome_cliente = form.cleaned_data['nome_cliente']
+            nif = form.cleaned_data['nif']
             cur = connections['default'].cursor()
-            cur.execute("call public.proc_inserir_cliente(%s);", [nome_cliente,])
+            cur.execute("call public.proc_inserir_cliente(%s);", [nome_cliente])
             return redirect('http://127.0.0.1:8000/clientes')  
     else:
         form = forms.Clientes()
     return render(request, 'adicionar.html', {'form': form, 'role': request.user_role})
+
+
+@has_permission('vendedor')
+def eliminar_clientes(request, clientes_id):
+
+    if request.method == "POST":
+            cur = connections['default'].cursor()
+            cur.execute("call public.proc_eliminar_cliente(%s);", [clientes_id])
+            return redirect('http://127.0.0.1:8000/clientes')  
+    return render(request, 'cliente_eliminar_confirm.html', {'role': request.user_role})
 
 @has_permission('vendedor')
 def exportar_equipamento(request, equipamentos_id):
@@ -102,6 +136,9 @@ def exportar_equipamento(request, equipamentos_id):
 
             db = conexaomongo
             produtos_collection = db["produtos"]
+
+            cur = connections['default'].cursor()
+            cur.execute("CALL public.proc_editar_eq_arm(%s);", [equipamentos_id])
 
             novo_equipamento = {
                 'pgsid_eq_arm': equipamentos_id,
@@ -176,7 +213,7 @@ def ver_produto(request, eq_id):
 def escolher_cliente(request):
 
     if request.method == "POST":
-        form = forms.Clientes(request.POST)
+        form = forms.Procura_cliente(request.POST)
         if form.is_valid():
             nif = form.cleaned_data['nif']
             cur = connections['default'].cursor()
@@ -191,7 +228,7 @@ def escolher_cliente(request):
                 redirect_url = f'/escolher_cliente/'
                 return HttpResponseRedirect(redirect_url)  
     else:
-        form = forms.Clientes()
+        form = forms.Procura_cliente()
 
     context = {'documentos': produtos, 'clientes': clientes, 'form': form, 'role': request.user_role}
         
@@ -268,7 +305,7 @@ def armazens(request):
         columns = [col[0] for col in cursor.description]
         armazem = cursor.fetchall()
     
-    return render(request, 'lista.html', {'vista': armazem, 'columns': columns, 'tipo': 'Armazens', 'role': request.user_role})
+    return render(request, 'lista_sem_acoes.html', {'vista': armazem, 'columns': columns, 'tipo': 'Armazens', 'role': request.user_role})
 
 @has_permission('armazem')
 def escolher_enc_para_guia(request):
@@ -376,7 +413,7 @@ def itens_remessa(request):
     return render(request, 'lista.html', {'vista': itens_remessa, 'columns': columns, 'tipo': 'Itens_das_remessas', 'role': request.user_role})
 
 @has_permission('armazem')
-def fatura_encomenda(request):
+def fatura_encomenda_armazem(request):
     
     with connections['default'].cursor() as cursor:
 
@@ -384,34 +421,7 @@ def fatura_encomenda(request):
         columns = [col[0] for col in cursor.description]
         fatura_encomenda = cursor.fetchall()
 
-    return render(request, 'lista.html', {'vista': fatura_encomenda, 'columns': columns, 'tipo': 'Faturas_das_encomendas', 'role': request.user_role})
-
-@has_permission('armazem')
-def editar_armazens(request, armazens_id):
-
-    with connections['default'].cursor() as cursor:
-        cursor.execute("SELECT * FROM func_armazem_id(%s);", [armazens_id])
-        columns = [col[0] for col in cursor.description]
-        armazens = cursor.fetchall()
-
-    if request.method == 'POST':
-        form = forms.Armazens(request.POST)
-        if form.is_valid():
-            nome_arm = form.cleaned_data["nome_arm"]
-            setor = form.cleaned_data["setor"]
-            notas = form.cleaned_data["notas"]
-            cur = connections['default'].cursor()
-            cur.execute("SELECT public.editar_armazem(%s, %s, %s, %s);", [armazens_id, nome_arm, setor, notas])
-            return redirect('http://127.0.0.1:8000/armazens')  
-    else:
-        form_initial_data = {}
-        if armazens:
-            armazem = armazens[0]
-            for idx, column in enumerate(columns):
-                form_initial_data[column] = armazem[idx]
-        form = forms.Armazens(initial=form_initial_data)
-    
-    return render(request, 'editar_registro.html', {'form': form, 'role': request.user_role})
+    return render(request, 'lista_sem_acoes.html', {'vista': fatura_encomenda, 'columns': columns, 'tipo': 'Faturas_das_encomendas', 'role': request.user_role})
 
 
 @has_permission('armazem')
@@ -421,23 +431,10 @@ def ficha_prod(request):
         cursor.execute("SELECT * FROM exibir_fp();")
         columns = [col[0] for col in cursor.description]
         fp = cursor.fetchall()
-    return render(request, 'fichas_producao.html', {'vista': fp, 'columns': columns, 'tipo': 'Ficha_Producao', 'role': request.user_role})
+    return render(request, 'lista_sem_acoes.html', {'vista': fp, 'columns': columns, 'tipo': 'Ficha_Producao', 'role': request.user_role})
 
 
-@has_permission('armazem')
-def armazenar_eq(request, id_fp):
 
-    if request.method == 'POST':
-        form = forms.Equipamentos_armazenados(request.POST)
-        if form.is_valid():
-            armazem = form.cleaned_data["armazem"]
-            cur = connections['default'].cursor()
-            cur.execute("CALL public.proc_inserir_equipamento_armazenado(%s, %s);", [armazem, id_fp])
-            return redirect('http://127.0.0.1:8000/fichas_producao')  
-    else:
-        form = forms.Equipamentos_armazenados()
-    
-    return render(request, 'adicionar.html', {'form': form, 'role': request.user_role})
 
 #############################################################  PRODUCAO  ##########################################################################################
 
@@ -515,11 +512,28 @@ def mo_ficha_prod(request, ficha_prod_id):
             hora_fim = form.cleaned_data['hora_fim']
             cur = connections['default'].cursor()
             cur.execute("call public.proc_inserir_mo_usada(%s, %s, %s, %s);", [ficha_prod_id, id_mao_obra, hora_inicio, hora_fim])
-            return redirect('http://127.0.0.1:8000/equipamentos')
+            redirect_url = f'/armazenar/{ficha_prod_id}'
+            return HttpResponseRedirect(redirect_url)
     else:
         form = forms.Mao_Obra_Usada()
 
     return render(request, 'adicionar.html', {'form': form, 'role': request.user_role})
+
+@has_permission('producao')
+def armazem_fichaprod_eq_arm(request, ficha_prod_id):
+
+    if request.method == 'POST':
+        form = forms.Equipamentos_armazenados(request.POST)
+        if form.is_valid():
+            armazem = form.cleaned_data["armazem"]
+            cur = connections['default'].cursor()
+            cur.execute("CALL public.proc_inserir_equipamento_armazenado(%s, %s);", [armazem, ficha_prod_id])
+            return redirect('http://127.0.0.1:8000/equipamentos')  
+    else:
+        form = forms.Equipamentos_armazenados()
+
+    return render(request, 'adicionar.html', {'form': form, 'role': request.user_role})
+
 
 @has_permission('producao') 
 def equipamentos(request):
@@ -546,31 +560,7 @@ def mao_obra(request):
 
 
 
-@has_permission('producao')
-def editar_componentes(request, componentes_id):
 
-    with connections['default'].cursor() as cursor:
-        cursor.execute("SELECT * FROM func_componente_nome(%s);", [componentes_id])
-        columns = [col[0] for col in cursor.description]
-        componentes = cursor.fetchall()
-
-    if request.method == 'POST':
-        form = forms.Componentes(request.POST)
-        if form.is_valid():
-            nome_comp = form.cleaned_data["nome_componente"]
-            desc_comp = form.cleaned_data["desc_componente"]
-            cur = connections['default'].cursor()
-            cur.execute("SELECT public.editar_componentes(%s, %s, %s);", [componentes_id, nome_comp, desc_comp])
-            return redirect('http://127.0.0.1:8000/componentes')  
-    else:
-        form_initial_data = {}
-        if componentes:
-            component = componentes[0]
-            for idx, column in enumerate(columns):
-                form_initial_data[column] = component[idx]
-        form = forms.Componentes(initial=form_initial_data)
-    
-    return render(request, 'editar_registro.html', {'form': form, 'role': request.user_role})
 
 @has_permission('producao')
 def editar_Mao_de_obra(request, mao_obra_id):
@@ -612,6 +602,17 @@ def comp_stock_prod(request):
 
 
 #############################################################  ENCOMENDA  ##########################################################################################
+
+@has_permission('encomenda')
+def fatura_encomenda(request):
+    
+    with connections['default'].cursor() as cursor:
+
+        cursor.execute("SELECT * FROM exibir_fatura_encomenda();")
+        columns = [col[0] for col in cursor.description]
+        fatura_encomenda = cursor.fetchall()
+
+    return render(request, 'lista_sem_acoes.html', {'vista': fatura_encomenda, 'columns': columns, 'tipo': 'Faturas_das_encomendas', 'role': request.user_role})
 
 @has_permission('encomenda')
 def comp_stock(request):
@@ -742,30 +743,7 @@ def adicionar_fornecedores(request):
         form = forms.fornecedores()
     return render(request, 'adicionar.html', {'form': form, 'tipo': 'Fornecedores', 'role': request.user_role})
 
-@has_permission('encomenda')
-def editar_Fatura_encomenda(request, fatura_encomenda_id):
 
-    with connections['default'].cursor() as cursor:
-        cursor.execute("SELECT * FROM func_fatura_id(%s);", [fatura_encomenda_id])
-        columns = [col[0] for col in cursor.description]
-        faturas_encomenda = cursor.fetchall()
-
-    if request.method == 'POST':
-        form = forms.fatura_encomenda(request.POST)
-        if form.is_valid():
-            preco_total_enc = form.cleaned_data["preco_total_enc"]
-            cur = connections['default'].cursor()
-            cur.execute("SELECT public.editar_fatura_encomenda(%s, %s);", [fatura_encomenda_id, preco_total_enc])
-            return redirect('http://127.0.0.1:8000/fatura_encomenda')  
-    else:
-        form_initial_data = {}
-        if faturas_encomenda:
-            fatura_encomenda = faturas_encomenda[0]
-            for idx, column in enumerate(columns):
-                form_initial_data[column] = fatura_encomenda[idx]
-        form = forms.fatura_encomenda(initial=form_initial_data)
-    
-    return render(request, 'editar_registro.html', {'form': form, 'role': request.user_role})
 
 @has_permission('encomenda')
 def editar_Fornecedores(request, fornecedores_id):
@@ -780,7 +758,7 @@ def editar_Fornecedores(request, fornecedores_id):
         if form.is_valid():
             nome_forn = form.cleaned_data["nome_forn"]
             cur = connections['default'].cursor()
-            cur.execute("SELECT public.editar_fornecedores(%s, %s);", [fornecedores_id, nome_forn])
+            cur.execute("CALL public.proc_editar_fornecedores(%s, %s);", [fornecedores_id, nome_forn])
             return redirect('http://127.0.0.1:8000/fornecedores')  
     else:
         form_initial_data = {}
@@ -802,6 +780,32 @@ def componentes(request):
 
     return render(request, 'componentes.html', {'vista': componentes, 'columns': columns, 'tipo': 'Componentes', 'role': request.user_role})
 
+@has_permission('encomenda')
+def editar_componentes(request, componentes_id):
+
+    with connections['default'].cursor() as cursor:
+        cursor.execute("SELECT * FROM func_componente_nome(%s);", [componentes_id])
+        columns = [col[0] for col in cursor.description]
+        componentes = cursor.fetchall()
+
+    if request.method == 'POST':
+        form = forms.Componentes(request.POST)
+        if form.is_valid():
+            nome_comp = form.cleaned_data["nome_comp"]
+            desc_comp = form.cleaned_data["desc_comp"]
+            cur = connections['default'].cursor()
+            cur.execute("CALL public.proc_editar_componentes(%s, %s, %s);", [componentes_id, nome_comp, desc_comp])
+            return redirect('http://127.0.0.1:8000/componentes')  
+    else:
+        form_initial_data = {}
+        if componentes:
+            component = componentes[0]
+            for idx, column in enumerate(columns):
+                form_initial_data[column] = component[idx]
+        form = forms.Componentes(initial=form_initial_data)
+    
+    return render(request, 'editar_registro.html', {'form': form, 'role': request.user_role})
+
 
 @has_permission('encomenda')
 def componentes_import_json(request):
@@ -814,32 +818,6 @@ def componentes_import_json(request):
 
     return redirect('http://127.0.0.1:8000/componentes')
 
-@has_permission('encomenda')
-def editar_equipamentos(request, equipamentos_id):
-
-    with connections['default'].cursor() as cursor:
-        query = "SELECT * FROM func_equipamento_nome(%s);"
-        cursor.execute(query, [equipamentos_id])
-        columns = [col[0] for col in cursor.description]
-        equipamentos = cursor.fetchall()
-
-    if request.method == 'POST':
-        form = forms.Equipamentos(request.POST)
-        if form.is_valid():
-            nome_equ = form.cleaned_data["nome_equipamento"]
-            tipo = form.cleaned_data["tipo"]
-            cur = connections['default'].cursor()
-            cur.execute("SELECT public.editar_equipamentos(%s, %s, %s);", [equipamentos_id, nome_equ, tipo])
-            return redirect('http://127.0.0.1:8000/equipamentos')  
-    else:
-        form_initial_data = {}
-        if equipamentos:
-            equipamento = equipamentos[0]
-            for idx, column in enumerate(columns):
-                form_initial_data[column] = equipamento[idx]
-        form = forms.Equipamentos(initial=form_initial_data)
-    
-    return render(request, 'editar_registro.html', {'form': form, 'role': request.user_role})
 
 #############################################################  LOGIN  ##########################################################################################
 

@@ -110,23 +110,17 @@ INSERT INTO public.mo_usada(
 	(6, 5, 1, '2023-05-16 13:00:00', '2023-05-16 15:00:00');
 	
 INSERT INTO public.equipamnetos_arm(
-	id_eq_arm, id_armazem, id_ficha_prod, id_quant_eq_arm)
-	VALUES (1, 1, 1, 2),
-	(2, 1, 2, 3),
-	(3, 2, 2, 3),
-	(4, 2, 3, 5),
-	(5, 1, 4, 1);
+	id_eq_arm, id_armazem, id_ficha_prod, estado)
+	VALUES (1, 1, 1, 'nao'),
+	(2, 1, 2, 'nao'),
+	(3, 2, 2,  'nao'),
+	(4, 2, 3,  'nao'),
+	(5, 1, 4,  'nao');
 	
 INSERT INTO public.clientes(
-	id_cliente, nome_cliente)
-	VALUES (1, 'antonio'),
-	(2, 'antonieta'),
-	(3, 'ambrosio'),
-	(4, 'manel');
-	
-INSERT INTO public.fatura_venda(
-	id_fatura_venda, id_eq_arm, id_cliente, preco_venda, quantidae_venda, data_fatura)
-	VALUES (1, 1, 1, 1200, 1, '2023-05-16 19:00:00'),
-	(2, 2, 2, 1250, 2, '2023-05-16 19:00:00'),
-	(3, 3, 2, 1300, 1, '2023-05-17 19:00:00'),
-	(4, 4, 3, 1400, 1, '2023-05-18 19:00:00');
+	id_cliente, nome_cliente, nif)
+	VALUES (1, 'antonio', '1234567'),
+	(2, 'antonieta', '1234568'),
+	(3, 'ambrosio', '1234569'),
+	(4, 'manel', '1234560');
+

@@ -18,7 +18,7 @@ $BODY$;
 
 CREATE OR REPLACE FUNCTION public.func_cliente_id(
 	id integer)
-    RETURNS TABLE(id_cliente integer, nome_cliente text) 
+    RETURNS TABLE(id_cliente integer, nome_cliente text, nif text) 
     LANGUAGE 'plpgsql'
     COST 100
     VOLATILE PARALLEL UNSAFE
@@ -27,7 +27,7 @@ CREATE OR REPLACE FUNCTION public.func_cliente_id(
 AS $BODY$
 BEGIN
     RETURN QUERY
-    SELECT vc.id_cliente, vc.nome_cliente
+    SELECT vc.id_cliente, vc.nome_cliente, vc.nif
     FROM public.view_clients vc
     WHERE vc.id_cliente = id;
 END;
@@ -255,4 +255,51 @@ BEGIN
     FROM public.view_mo vmo
     WHERE vmo.id_mao_obra = id;
 END;
+$BODY$;
+
+
+
+CREATE OR REPLACE FUNCTION public.preco_equipamento(
+	id integer)
+    RETURNS money
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+DECLARE
+	preco_eq numeric;
+	preco_mo numeric;
+	preco_total numeric;
+BEGIN
+    
+    SELECT custo_producao::numeric, custo_mo::numeric INTO preco_eq, preco_mo
+	FROM equipamnetos_arm er 
+		LEFT JOIN ficha_producao fp 
+			ON er.id_ficha_prod = fp.id_ficha_prod
+		LEFT JOIN mo_usada mu
+			ON fp.id_ficha_prod = mu.id_ficha_prod
+		LEFT JOIN mao_obra mo
+			ON mu.id_mao_obra = mo.id_mao_obra
+	WHERE er.id_eq_arm = id;
+	
+	preco_total = preco_eq + preco_mo;
+	preco_total = preco_total * 1.15;
+	
+	RETURN preco_total::money;
+END;
+$BODY$;
+
+
+CREATE OR REPLACE FUNCTION public.exibir_fatura_venda( id integer)
+    RETURNS TABLE(id_fatura_venda integer, nome_cliente text, preco_total money, data_fatura timestamp without time zone, nome_equipamento text) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+begin
+	return query select * from view_fatura_venda
+	where view_fatura_venda.id_fatura_venda = id;
+end;
 $BODY$;

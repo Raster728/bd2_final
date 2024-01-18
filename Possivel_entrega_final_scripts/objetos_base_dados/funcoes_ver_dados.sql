@@ -15,7 +15,7 @@ $BODY$;
 
 CREATE OR REPLACE FUNCTION public.exibir_clients(
 	)
-    RETURNS TABLE(id_cliente integer, nome_cliente text) 
+    RETURNS TABLE(id_cliente integer, nome_cliente text, nif text) 
     LANGUAGE 'plpgsql'
     COST 100
     VOLATILE PARALLEL UNSAFE
@@ -314,5 +314,23 @@ CREATE OR REPLACE FUNCTION public.exibir_fp(
 AS $BODY$
 begin
 	return query select * from view_fp;
+end;
+$BODY$;
+
+
+
+
+
+CREATE OR REPLACE FUNCTION public.exibir_faturas_venda(
+	)
+    RETURNS TABLE(id_fatura_venda integer, nome_cliente text, preco_total money, data_fatura timestamp without time zone) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+begin
+	return query select * from view_faturas_venda;
 end;
 $BODY$;

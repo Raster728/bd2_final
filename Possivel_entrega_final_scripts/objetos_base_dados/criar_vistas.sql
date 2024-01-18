@@ -92,7 +92,7 @@ CREATE OR REPLACE VIEW public.view_equipamentos_armazenados
      LEFT JOIN armazem a ON a.id_armazem = ea.id_armazem
      LEFT JOIN ficha_producao fp ON ea.id_ficha_prod = fp.id_ficha_prod
      LEFT JOIN equipamentos e ON fp.id_equipamento = e.id_equipamento
-	 WHERE ea.id_eq_arm NOT IN (SELECT id_eq_arm FROM itens_fatura_venda);
+  WHERE ea.estado = 'nao'::text;
 	 
 CREATE OR REPLACE VIEW public.view_fatura_and_items
  AS
@@ -235,5 +235,35 @@ CREATE OR REPLACE VIEW public.view_itens_com_id
 	 
 CREATE OR REPLACE VIEW public.view_fp
  AS
- SELECT fp.id_ficha_prod, nome_equipamento, tipo, custo_producao FROM ficha_producao fp
- LEFT JOIN equipamentos e ON fp.id_equipamento = e.id_equipamento
+ SELECT fp.id_ficha_prod,
+    e.nome_equipamento,
+    e.tipo,
+    fp.custo_producao
+   FROM ficha_producao fp
+     LEFT JOIN equipamentos e ON fp.id_equipamento = e.id_equipamento;
+ 
+CREATE OR REPLACE VIEW public.view_fatura_venda
+ AS
+ SELECT fv.id_fatura_venda,
+    c.nome_cliente,
+    fv.preco_total,
+    fv.data_fatura,
+    e.nome_equipamento
+   FROM fatura_venda fv
+     LEFT JOIN clientes c ON fv.id_cliente = c.id_cliente
+     LEFT JOIN itens_fatura_venda ifv ON fv.id_fatura_venda = ifv.id_fatura_venda
+     LEFT JOIN equipamnetos_arm ea ON ifv.id_eq_arm = ea.id_eq_arm
+     LEFT JOIN ficha_producao fp ON ea.id_ficha_prod = fp.id_ficha_prod
+     LEFT JOIN equipamentos e ON fp.id_equipamento = e.id_equipamento;
+	 
+	 
+	 
+CREATE OR REPLACE VIEW public.view_faturas_venda
+ AS
+ SELECT fv.id_fatura_venda,
+    c.nome_cliente,
+    fv.preco_total,
+    fv.data_fatura
+   FROM fatura_venda fv
+     LEFT JOIN clientes c ON fv.id_cliente = c.id_cliente
+     LEFT JOIN itens_fatura_venda ifv ON fv.id_fatura_venda = ifv.id_fatura_venda

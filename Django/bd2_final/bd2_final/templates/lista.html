@@ -71,7 +71,9 @@
                     <td>{{ field }}</td>
                     {% endfor %}
                     <td>
+                        {% if tipo == 'Faturas_das_encomendas' %}
                         <button><a href="/editar_{{tipo}}/{{row.0}}">Editar</a></button>
+                        {% endif %}
                         <button><a href="/eliminar_{{tipo}}/{{row.0}}">Eliminar</a></button>
                     </td>
                 </tr>

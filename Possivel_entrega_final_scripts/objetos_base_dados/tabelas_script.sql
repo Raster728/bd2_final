@@ -128,6 +128,7 @@ CREATE TABLE IF NOT EXISTS public.equipamnetos_arm
     id_eq_arm integer NOT NULL DEFAULT nextval('equipamentos_arm_id_sequence'::regclass),
     id_armazem integer,
     id_ficha_prod integer,
+    estado text COLLATE pg_catalog."default",
     CONSTRAINT pk_equipamnetos_arm PRIMARY KEY (id_eq_arm),
     CONSTRAINT fk_equipamn_relations_armazem FOREIGN KEY (id_armazem)
         REFERENCES public.armazem (id_armazem) MATCH SIMPLE

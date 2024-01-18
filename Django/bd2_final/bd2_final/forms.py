@@ -26,6 +26,10 @@ class Componentes(forms.Form):
     desc_comp = forms.CharField(label='Descrição do componente', max_length=100)
 
 class Clientes(forms.Form):
+    nome_cliente = forms.CharField(label='Nome do cliente', max_length=100)
+    nif = forms.CharField(label='NIF', max_length=100)
+
+class Procura_cliente(forms.Form):
     nif = forms.CharField(label='NIF', max_length=100)
 
 class Armazens(forms.Form):

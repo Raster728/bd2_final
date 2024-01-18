@@ -21,12 +21,13 @@ $BODY$;
 
 
 CREATE OR REPLACE PROCEDURE public.proc_inserir_cliente(
-	IN nome text)
+	IN nome text,
+	IN n text)
 LANGUAGE 'plpgsql'
 AS $BODY$
 BEGIN
-    INSERT INTO clientes (nome_cliente)
-    VALUES (nome);
+    INSERT INTO clientes (nome_cliente, nif)
+    VALUES (nome, n);
     
 END;
 $BODY$;
@@ -250,8 +251,8 @@ CREATE OR REPLACE PROCEDURE public.proc_inserir_equipamento_armazenado(
 LANGUAGE 'plpgsql'
 AS $BODY$
 BEGIN
-    INSERT INTO equipamnetos_arm (id_armazem, id_ficha_prod)
-    VALUES (armazem, ficha_prod);
+    INSERT INTO equipamnetos_arm (id_armazem, id_ficha_prod, estado)
+    VALUES (armazem, ficha_prod, 'nao');
     
 END;
 $BODY$;

@@ -39,8 +39,20 @@ urlpatterns = [
     path('encomendas', views.encomendas, name="vista_encomendas"),
     path('equipamentos', views.equipamentos, name="vista_equipamentos"),
     path('equipamentos_armazenados', views.equipamentos_armazenados, name="vista_equipamentos_armazenados"),
+    path('armazenar/<int:ficha_prod_id>', views.armazem_fichaprod_eq_arm, name="armazenar"),
+
     path('fatura_and_items', views.fatura_and_items, name="vista_fatura_and_items"),
     path('fatura_encomenda', views.fatura_encomenda, name="vista_fatura_encomenda"),
+    path('fatura_encomenda_armazem', views.fatura_encomenda_armazem, name="vista_fatura_encomenda_armazem"),
+
+
+    path('fatura_venda', views.fatura_venda, name="vista_fatura_venda"),
+    path('ver_fatura/<int:fatura_id>', views.fatura_venda_ver, name="ver_fatura"),
+    
+    
+    
+
+
     path('fornecedores', views.fornecedores, name="vista_fornecedores"),
     path('guia_remessa', views.guia_remessa, name="vista_guia_remessa"),
     path('itens_encomenda', views.itens_encomenda, name="vista_itens_encomenda"),
@@ -55,16 +67,16 @@ urlpatterns = [
 
     path('fichas_producao', views.ficha_prod, name="fichas_producao"),
     path('ficha_prod_producao', views.ficha_prod_producao, name="ficha_prod_producao"),
-    path('fichas_producao/<int:id_fp>', views.armazenar_eq, name="fichas_producao_armazenar"),
     
 
     #############################################################  UPDATE  ##########################################################################################
 
-    path('editar_Equipamentos/<int:equipamentos_id>/', views.editar_equipamentos, name='editar_Equipamentos'),
     path('editar_Componentes/<int:componentes_id>/', views.editar_componentes, name='editar_Componentes'),
+
+
     path('editar_Clientes/<int:clientes_id>/', views.editar_clientes, name='editar_Clientes'),
-    path('editar_Armazens/<int:armazens_id>/', views.editar_armazens, name='editar_Armazens'),
-    path('editar_Faturas_das_encomendas/<int:fatura_encomenda_id>/', views.editar_Fatura_encomenda, name='editar_Fatura_encomenda'),
+    path('eliminar_Clientes/<int:clientes_id>/', views.eliminar_clientes, name='eliminar_Clientes'),
+
 
 
     path('editar_Fornecedores/<int:fornecedores_id>/', views.editar_Fornecedores, name='editar_Fornecedores'),

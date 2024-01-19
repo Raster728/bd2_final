@@ -17,7 +17,7 @@ No mongoDB, nós usámos o compas, com o host sendo mongodb://localhost:27017 . 
 
 Django:
 
-No django tudo que é necessário de setup é executado no script de instalação, lá faz as migrações necessárias. Quando estiverem na página login, para testar façam login com um de 4 utilizadores. Vou mencionar cada um e a sua role:
+No django tudo que é necessário de setup é executado no script de instalação, por isso antes de começarem, executem o script install.bat, lá faz as migrações necessárias. Quando estiverem na página login, para testar façam login com um de 4 utilizadores. Vou mencionar cada um e a sua role:
 
 - Rafael: é um vendedor, email é rafael@gmail.com e palavra-passe é 12345;
 - Maria: faz parte da producao, email é maria@gmail.com e palavra-passe é 12345;

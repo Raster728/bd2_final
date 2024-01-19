@@ -1,19 +1,6 @@
 @echo off
 
 
-start /wait python-3.10.5-amd64.exe  /quiet
-
-start /wait mongodb-windows-x86_64-6.0.8-signed.msi /quiet
-
-
-pip install django==4.2.4
-
-python -m pip install pymongo
-
-
-
-
-
 git clone https://github.com/Raster728/bd2_final.git
 
 

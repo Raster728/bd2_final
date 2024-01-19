@@ -3,7 +3,7 @@
 
 PgAdmin:
 
-Para começar no pgadmin, estamos a usar a versão postgres 15. O primeiro script a executar é o script "criar_utilizador", de seguida "criar_base_dados" -> "tabelas_scripts" -> "insert_dados" -> "sequencias" -> "criar_vistas" -> depois desses a ordem é indiferente, mas todos os scripts têm de ser executados.
+Para começar no pgadmin, estamos a usar a versão postgres 15. O primeiro script a executar é o script "criar_utilizador", de seguida "criar_base_dados" ->  "sequencias" -> "tabelas_scripts" -> "insert_dados" -> "criar_vistas" -> depois desses a ordem é indiferente, mas todos os scripts têm de ser executados.
 
 
 MongoDB:

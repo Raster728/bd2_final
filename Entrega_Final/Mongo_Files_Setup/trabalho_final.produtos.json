@@ -1,0 +1,18 @@
+[{
+  "_id": {
+    "$oid": "65aab063f99cedffe0448475"
+  },
+  "pgsid_eq_arm": 1,
+  "nome_equipamento": "PC Gaming",
+  "Velocidade": "Computador mais rápido",
+  "Preço": "R$ 1.324,80"
+},
+{
+  "_id": {
+    "$oid": "65aab079f99cedffe0448476"
+  },
+  "pgsid_eq_arm": 5,
+  "nome_equipamento": "PC BattleStation",
+  "Capacidade": "Computador mais capaz",
+  "Preço": "R$ 175,95"
+}]

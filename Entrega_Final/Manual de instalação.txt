@@ -1,6 +1,6 @@
 Link para o projeto no github: https://github.com/Raster728/bd2_final.git
 
-É necessário executar primeiro os scripts do postgres e depois o script the instalação install.bat, dado que são feitas migrações para o postgres dentro desse script. No script de instalação não é deita nenhuma instalação de mongo, python nem django, não encontrámos maneira de executar um script para fazer essas instalações. Caso seja necessário saber as versões são as seguintes:
+É necessário executar primeiro os scripts do postgres e depois o script the instalação install.bat que está na pasta 'Script_instalacao', dado que são feitas migrações para o postgres dentro desse script. No script de instalação não é feita nenhuma instalação de mongo, python, nem django. Não encontrámos maneira de executar um script para fazer essas instalações. Caso seja necessário saber as versões, são as seguintes:
 
 - Python: 3.10.5
 - Django: 4.2.4
@@ -9,12 +9,12 @@ Link para o projeto no github: https://github.com/Raster728/bd2_final.git
 
 PgAdmin:
 
-Para começar no pgadmin, estamos a usar a versão postgres 15. O primeiro script a executar é o script "criar_utilizador", de seguida "criar_base_dados" ->  "sequencias" -> "tabelas_scripts" -> "popular_base_dados" -> "criar_vistas" -> depois desses a ordem é indiferente, mas todos os scripts têm de ser executados.
+Para começar no pgadmin, estamos a usar a versão postgres 15. Os scripts estão na pasta 'Scripts'. O primeiro script a executar é o script "criar_utilizador", de seguida "criar_base_dados" ->  "sequencias" -> "tabelas_scripts" -> "popular_base_dados" -> "criar_vistas" -> depois desses a ordem é indiferente, mas todos os scripts têm de ser executados.
 
 
 MongoDB:
 
-No mongoDB, nós usámos o compas, com o host sendo mongodb://localhost:27017 . É necessário criar uma base de dados chamada 'trabalho_final'. De seguida têm de ser criadas 3 coleções, "carrinhos", "produtos" e "users". Para que seja possível utilizar a plataforma web é necessário criar os utilizadores, sendo que o login na página tme de ser feita pelo mongo. O ficheiro a inserir na coleção "users" para que isso seja possível é "trabalho_final_users.json". De seguida é necessário importar o ficheiro "produtos_mongo.json" para popular a coleção produtos.
+No mongoDB, nós usámos o compas, com o host sendo mongodb://localhost:27017 . É necessário criar uma base de dados chamada 'trabalho_final'. De seguida têm de ser criadas 3 coleções, "carrinhos", "produtos" e "users". Para que seja possível utilizar a plataforma web é necessário criar os utilizadores, sendo que o login na página tme de ser feita pelo mongo. O ficheiro a inserir na coleção "users" para que isso seja possível é "trabalho_final.users.json", estes ficheiros estão na pasta 'Mongo_Files_Setup'. De seguida é necessário importar o ficheiro "trabalho_final.produtos.json" para popular a coleção produtos.
 
 
 Django:

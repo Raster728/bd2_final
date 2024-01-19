@@ -1,3 +1,5 @@
+Link para o projeto no github: https://github.com/Raster728/bd2_final.git
+
 É necessário executar primeiro os scripts do postgres e depois o script the instalação install.bat, dado que são feitas migrações para o postgres dentro desse script. No script de instalação não é deita nenhuma instalação de mongo, python nem django, não encontrámos maneira de executar um script para fazer essas instalações. Caso seja necessário saber as versões são as seguintes:
 
 - Python: 3.10.5

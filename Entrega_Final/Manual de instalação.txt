@@ -1,0 +1,24 @@
+É necessário executar primeiro os scripts do postgres e depois o script the instalação install.bat, dado que são feitas migrações para o postgres dentro desse script.
+
+
+PgAdmin:
+
+Para começar no pgadmin, estamos a usar a versão postgres 15. O primeiro script a executar é o script "criar_utilizador", de seguida "criar_base_dados" -> "tabelas_scripts" -> "insert_dados" -> "sequencias" -> "criar_vistas" -> depois desses a ordem é indiferente, mas todos os scripts têm de ser executados.
+
+
+MongoDB:
+
+No MongoDB vão existe 3 coleções, "carrinhos", "produtos" e "users". Para que seja possível utilizar a plataforma web é necessário criar os utilizadores para que possa ser feito o login. O ficheiro a inserir na coleção "users" para que isso seja possível é "trabalho_final_users.json". De seguida é necessário importar o ficheiro "produtos_mongo.json" para popular a coleção produtos.
+
+Django:
+
+No django tudo que é necessário de setup é executado no script de instalação. Quando estiverem na página login, para testar façam login com um de 4 utilizadores. Vou mencionar cada um e a sua role:
+
+- Rafael: é um vendedor, email é rafael@gmail.com e palavra-passe é 12345;
+- Maria: faz parte da producao, email é maria@gmail.com e palavra-passe é 12345;
+- Eduardo: trabalha no armazem, email é eduardo@gmail.com e palavra-passe é 12345;
+- Marco: trabalha nas encomendas, email é marco@gmail.com e palavra-passe é 12345;
+
+Depois do login irá aparecer uma página inicial com todos os ramos, cada utilizador só pode aceder ao seu ramo.
+
+

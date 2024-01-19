@@ -267,7 +267,7 @@ CREATE OR REPLACE VIEW public.view_faturas_venda
     fv.data_fatura
    FROM fatura_venda fv
      LEFT JOIN clientes c ON fv.id_cliente = c.id_cliente
-     LEFT JOIN itens_fatura_venda ifv ON fv.id_fatura_venda = ifv.id_fatura_venda
+     LEFT JOIN itens_fatura_venda ifv ON fv.id_fatura_venda = ifv.id_fatura_venda;
 	 
 	 
 CREATE OR REPLACE VIEW public.view_fatura_encomenda_itens

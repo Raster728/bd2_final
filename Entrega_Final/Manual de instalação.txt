@@ -8,7 +8,7 @@ Para começar no pgadmin, estamos a usar a versão postgres 15. O primeiro scrip
 
 MongoDB:
 
-No MongoDB vão existe 3 coleções, "carrinhos", "produtos" e "users". Para que seja possível utilizar a plataforma web é necessário criar os utilizadores para que possa ser feito o login. O ficheiro a inserir na coleção "users" para que isso seja possível é "trabalho_final_users.json". De seguida é necessário importar o ficheiro "produtos_mongo.json" para popular a coleção produtos.
+No MongoDB, o nome da databse tem de ser 'trabalho_final', vão existir 3 coleções, "carrinhos", "produtos" e "users". Para que seja possível utilizar a plataforma web é necessário criar os utilizadores para que possa ser feito o login. O ficheiro a inserir na coleção "users" para que isso seja possível é "trabalho_final_users.json". De seguida é necessário importar o ficheiro "produtos_mongo.json" para popular a coleção produtos.
 
 Django:
 

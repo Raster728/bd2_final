@@ -3,8 +3,7 @@ CREATE SEQUENCE IF NOT EXISTS public.cliente_id_sequence
     START 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
-    CACHE 1
-    OWNED BY clientes.id_cliente;
+    CACHE 1;
 	
 
 CREATE SEQUENCE IF NOT EXISTS public.equipamentos_id_sequence

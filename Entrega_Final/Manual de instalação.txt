@@ -1,4 +1,8 @@
-É necessário executar primeiro os scripts do postgres e depois o script the instalação install.bat, dado que são feitas migrações para o postgres dentro desse script.
+É necessário executar primeiro os scripts do postgres e depois o script the instalação install.bat, dado que são feitas migrações para o postgres dentro desse script. No script de instalação não é deita nenhuma instalação de mongo, python nem django, não encontrámos maneira de executar um script para fazer essas instalações. Caso seja necessário saber as versões são as seguintes:
+
+- Python: 3.10.5
+- Django: 4.2.4
+- Mongo: 6.0.8
 
 
 PgAdmin:
@@ -8,11 +12,12 @@ Para começar no pgadmin, estamos a usar a versão postgres 15. O primeiro scrip
 
 MongoDB:
 
-No MongoDB, o nome da databse tem de ser 'trabalho_final', vão existir 3 coleções, "carrinhos", "produtos" e "users". Para que seja possível utilizar a plataforma web é necessário criar os utilizadores para que possa ser feito o login. O ficheiro a inserir na coleção "users" para que isso seja possível é "trabalho_final_users.json". De seguida é necessário importar o ficheiro "produtos_mongo.json" para popular a coleção produtos.
+No mongoDB, nós usámos o compas, com o host sendo mongodb://localhost:27017 . É necessário criar uma base de dados chamada 'trabalho_final'. De seguida têm de ser criadas 3 coleções, "carrinhos", "produtos" e "users". Para que seja possível utilizar a plataforma web é necessário criar os utilizadores, sendo que o login na página tme de ser feita pelo mongo. O ficheiro a inserir na coleção "users" para que isso seja possível é "trabalho_final_users.json". De seguida é necessário importar o ficheiro "produtos_mongo.json" para popular a coleção produtos.
+
 
 Django:
 
-No django tudo que é necessário de setup é executado no script de instalação. Quando estiverem na página login, para testar façam login com um de 4 utilizadores. Vou mencionar cada um e a sua role:
+No django tudo que é necessário de setup é executado no script de instalação, lá faz as migrações necessárias. Quando estiverem na página login, para testar façam login com um de 4 utilizadores. Vou mencionar cada um e a sua role:
 
 - Rafael: é um vendedor, email é rafael@gmail.com e palavra-passe é 12345;
 - Maria: faz parte da producao, email é maria@gmail.com e palavra-passe é 12345;
